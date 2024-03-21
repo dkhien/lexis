@@ -15,8 +15,4 @@ function Logo() {
   );
 }
 
-// Logo.propTypes = {
-//   type: PropTypes.string.isRequired,
-// };
-
 export default Logo;
