@@ -6,7 +6,9 @@ import {
 import './App.css';
 import Home from './pages/Home';
 import Upload from './pages/Upload';
-import Reading from './pages/Reading';
+import Reader from './pages/Reader';
+import NotFound from './pages/NotFound';
+import MainLayout from './layout/MainLayout';
 
 function App() {
   const routes = [
@@ -19,12 +21,18 @@ function App() {
       element: <Upload />,
     },
     {
-      path: '/reading',
-      element: <Reading />,
+      path: '/reader',
+      element: <Reader />,
+    },
+    {
+      path: '*',
+      element: <NotFound />,
+      allowedRoles: [],
     },
   ];
   return (
     <BrowserRouter>
+      <MainLayout />
       <Routes>
         {routes.map((route) => (
           <Route
