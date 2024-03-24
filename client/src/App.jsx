@@ -1,5 +1,4 @@
 import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import {
   BrowserRouter, Routes, Route,
 } from 'react-router-dom';
@@ -27,7 +26,6 @@ function App() {
     {
       path: '*',
       element: <NotFound />,
-      allowedRoles: [],
     },
   ];
   return (
