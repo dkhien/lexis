@@ -80,3 +80,4 @@ This project is built with:
 - [Node.js](https://nodejs.org/)
 - [React](https://react.dev/)
 - [Express](https://expressjs.com/)
+- [Tesseract] (https://github.com/tesseract-ocr/tesseract)
