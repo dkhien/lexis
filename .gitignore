@@ -27,6 +27,7 @@ client/yarn-error.log*
 # dependencies
 server/node_modules
 server/utils/logger/logs
+server/uploads
 
 # COMMON
 # IDE configs
