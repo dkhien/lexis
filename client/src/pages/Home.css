@@ -1,0 +1,50 @@
+/* Readable Fonts */
+body {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 1.2em; /* equivalent to 16-19px */
+    letter-spacing: 0.035em; /* 35% of average letter width */
+    word-spacing: 0.125em; /* at least 3.5 times the inter-letter spacing */
+    line-height: 1.5; /* proportional to inter-word spacing */
+    text-align: left;
+    text-decoration: none;
+}
+
+/* Headings and Structure */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 1.2em; /* 20% larger than normal text */
+}
+
+/* Colour */
+body {
+    color: #333; /* dark colored text */
+    background-color: #f9f9f9; /* light background */
+}
+
+/* Layout */
+.container {
+    max-width: 800px; /* adjust according to your layout */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Writing Style */
+p {
+    margin-bottom: 15px; /* add space between paragraphs */
+}
+
+ul, ol {
+    margin-bottom: 15px; /* add space between lists and paragraphs */
+}
+
+/* Links */
+a {
+    color: #0066cc; /* ensure hyperlinks look different from normal text */
+}
+
+a:hover {
+    text-decoration: underline;
+}
