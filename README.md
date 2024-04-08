@@ -34,6 +34,29 @@ cd client
 npm ci
 ```
 
+#### Install Tesseract
+##### For Macos
+
+```sh
+brew install tesseract
+```
+
+##### For Windows
+
+Download the installer from the Tesseract GitHub repository (https://github.com/tesseract-ocr/tesseract) and follow the installation instructions.
+
+##### After install Tesseract
+
+```sh
+cd server
+npm install node-tesseract-ocr
+```
+
+##### Install Vietnamese package
+
+Download file vie.traineddata from https://github.com/tesseract-ocr/tessdata/blob/main/vie.traineddata
+Locate file to folder tessdata.
+
 ### 2. Boot the application
 
 #### The Back-end
@@ -57,3 +80,4 @@ This project is built with:
 - [Node.js](https://nodejs.org/)
 - [React](https://react.dev/)
 - [Express](https://expressjs.com/)
+- [Tesseract](https://github.com/tesseract-ocr/tesseract)
