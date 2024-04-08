@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
+import FileUploadDropzone from '../components/FileUploadDropzone';
 
 function Home() {
+  const [files, setFiles] = useState([]);
+
   return (
-    <h1>Home</h1>
+    <div>
+      {files.length === 0 ? (
+        <FileUploadDropzone setFiles={setFiles} />
+      ) : (
+        <h1>UPLOAD COMPONENT</h1>
+      )}
+    </div>
   );
 }
 
