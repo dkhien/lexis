@@ -1,6 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const uuidv4 = require('uuid').v4;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -10,7 +11,7 @@ const storage = multer.diskStorage({
     });
   },
   filename: (req, file, cb) => {
-    const randomId = Math.random().toString(36).substring(2, 8);
+    const randomId = uuidv4();
     cb(null, `${randomId}-${Date.now()}-${file.originalname}`);
   },
 });
