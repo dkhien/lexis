@@ -35,7 +35,7 @@ npm ci
 ```
 
 #### Install Tesseract
-##### For Macos
+##### For MacOS
 
 ```sh
 brew install tesseract
@@ -43,18 +43,12 @@ brew install tesseract
 
 ##### For Windows
 
-Download the installer from the Tesseract GitHub repository (https://github.com/tesseract-ocr/tesseract) and follow the installation instructions.
-
-##### After install Tesseract
-
-```sh
-cd server
-npm install node-tesseract-ocr
-```
+Download the installer from the [Tesseract GitHub repository](https://github.com/tesseract-ocr/tesseract "Tesseract GitHub repository") and follow the installation instructions.
 
 ##### Install Vietnamese package
 
-Download file vie.traineddata from https://github.com/tesseract-ocr/tessdata/blob/main/vie.traineddata
+Download [Vietnamese language data file](https://github.com/tesseract-ocr/tessdata/blob/main/vie.traineddata).
+
 Locate file to folder tessdata.
 
 ### 2. Boot the application
