@@ -33,8 +33,10 @@ cd ..
 cd client
 npm ci
 ```
-
-### 2. Boot the application
+### 2. Enviroment variables
+- Clone the `/client/.env.template` file into `/client/.env`
+- Fill in empty fields (if any)
+### 3. Boot the application
 
 #### The Back-end
 
