@@ -23,10 +23,13 @@ client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
 
+client/.env
+
 # SERVER
 # dependencies
 server/node_modules
 server/utils/logger/logs
+server/uploads
 
 # COMMON
 # IDE configs
