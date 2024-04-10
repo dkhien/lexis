@@ -51,7 +51,7 @@ function Upload({ files, setFiles }) {
     });
 
     // TODO: Remove console.log
-    console.log(response);
+    console.log(response.data);
   };
 
   const updatedFiles = files.map((file) => ({ ...file, state: 'READY' }));
@@ -87,7 +87,7 @@ function Upload({ files, setFiles }) {
             size="large"
             color="error"
             startIcon={<DeleteIcon />}
-            sx={{ marginRight: '2rem' }}
+            sx={{ marginRight: '1rem' }}
             aria-label="clear-all-file"
             onClick={removeAllFiles}
           >
