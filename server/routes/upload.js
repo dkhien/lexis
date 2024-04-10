@@ -11,7 +11,15 @@ router.post('/', upload.array('files'), (req, res, next) => {
     error.httpStatusCode = 400;
     return next(error);
   }
-  res.send(files);
+  const filesWithId = files.map((file) => {
+    const fileWithId = {
+      id: file.filename.slice(0, 36),
+      file,
+    };
+    return fileWithId;
+  });
+
+  res.send(filesWithId);
   return null;
 });
 

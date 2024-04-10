@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FileUploadDropzone from '../components/FileUploadDropzone';
+import Upload from '../components/Upload';
 
 function Home() {
   const [files, setFiles] = useState([]);
@@ -9,7 +10,7 @@ function Home() {
       {files.length === 0 ? (
         <FileUploadDropzone setFiles={setFiles} />
       ) : (
-        <h1>UPLOAD COMPONENT</h1>
+        <Upload files={files} setFiles={setFiles} />
       )}
     </div>
   );
