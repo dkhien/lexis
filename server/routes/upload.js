@@ -1,6 +1,6 @@
 const express = require('express');
 const upload = require('../middlewares/multer');
-const { processFiles } = require('../controllers/uploadController');
+const { process } = require('../controllers/uploadController');
 
 const router = express.Router();
 
@@ -11,11 +11,10 @@ router.post('/', upload.array('files'), async (req, res, next) => {
     if (!files || files.length === 0) {
       const error = new Error('Please choose files');
       error.httpStatusCode = 400;
-      return next(error);
+      throw error;
     }
 
-    const result = await processFiles(files);
-
+    const result = await process(files);
     res.send(result);
   } catch (error) {
     next(error);

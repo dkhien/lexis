@@ -1,5 +1,6 @@
 import { AppBar, Container, Box } from '@mui/material';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
 
 function Header() {
@@ -10,7 +11,9 @@ function Header() {
           display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '1rem',
         }}
         >
-          <Logo />
+          <Link to="/">
+            <Logo />
+          </Link>
         </Box>
       </Container>
     </AppBar>

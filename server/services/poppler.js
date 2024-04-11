@@ -2,6 +2,7 @@ const { Poppler } = require('node-poppler');
 const fs = require('fs');
 const path = require('path');
 const winstonLogger = require('../utils/logger');
+const { Directory } = require('../utils/fileUtils');
 
 const OutputFileType = {
   PNG: 'png',
@@ -23,7 +24,7 @@ async function convertPdf(pdf, outputType = OutputFileType.PNG) {
     lastPageToConvert: -1,
   };
 
-  const outputFolder = path.join(__dirname, '../uploads', `${path.basename(pdf, path.extname(pdf))}_${outputType}`);
+  const outputFolder = path.join(__dirname, '../', Directory.UPLOADS, `${path.basename(pdf, path.extname(pdf))}_${outputType}`);
 
   fs.mkdirSync(outputFolder, { recursive: true });
   const outputFile = path.join(outputFolder, 'output');

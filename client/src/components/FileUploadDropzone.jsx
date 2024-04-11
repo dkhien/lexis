@@ -7,6 +7,7 @@ import {
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
+import State from '../constants';
 
 const baseStyle = {
   display: 'flex',
@@ -57,6 +58,7 @@ function FileUploadDropzone({ setFiles }) {
         );
         const filesWithId = filteredFiles.map((file) => ({
           id: uuidv4(),
+          state: State.READY,
           file,
         }));
         setFiles((prevFiles) => [...prevFiles, ...filesWithId]);

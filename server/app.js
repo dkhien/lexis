@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/upload', uploadRouter);
+app.use('/api/upload', uploadRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -39,9 +39,13 @@ app.use((err, req, res) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // send the error back to the requester
+  res.status(err.status || 500).json({
+    error: {
+      message: err.message,
+      stack: req.app.get('env') === 'development' ? err.stack : undefined,
+    },
+  });
 });
 
 module.exports = app;

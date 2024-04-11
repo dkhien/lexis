@@ -30,6 +30,7 @@ client/.env
 server/node_modules
 server/utils/logger/logs
 server/uploads
+server/results
 
 # COMMON
 # IDE configs

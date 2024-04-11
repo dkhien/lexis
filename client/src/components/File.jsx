@@ -9,6 +9,12 @@ const buttonSize = '2rem';
 
 function File({ file, handleRemoveFile }) {
   const fileSize = convertSize(file.file.size);
+
+  const handleDownload = () => {
+    // TODO: Implement file download
+
+  };
+
   return (
     <>
       <Box
@@ -29,6 +35,7 @@ function File({ file, handleRemoveFile }) {
             fileState={file.state}
             buttonSize={buttonSize}
             handleRemoveFile={handleRemoveFile}
+            handleDownload={handleDownload}
           />
         </Box>
       </Box>
@@ -46,6 +53,8 @@ File.propTypes = {
     }).isRequired,
     id: PropTypes.string.isRequired,
     state: PropTypes.string.isRequired,
+    resultPath: PropTypes.string,
+    resultFile: PropTypes.string,
   }).isRequired,
   handleRemoveFile: PropTypes.func.isRequired,
 };
