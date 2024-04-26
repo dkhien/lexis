@@ -8,6 +8,7 @@ const winstonLogger = require('./utils/logger');
 
 const indexRouter = require('./routes/index');
 const uploadRouter = require('./routes/upload');
+const downloadRouter = require('./routes/download');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/api/upload', uploadRouter);
+app.use('/api/download', downloadRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
