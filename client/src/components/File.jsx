@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Divider } from '@mui/material';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import ButtonStack from './ButtonStack';
 import FileInfo from './FileInfo';
 import convertSize from '../utils/unitConverter';
@@ -10,9 +11,33 @@ const buttonSize = '2rem';
 function File({ file, handleRemoveFile }) {
   const fileSize = convertSize(file.file.size);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     // TODO: Implement file download
+    const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download/${file.resultFile}`;
+    await axios({
+      method: 'get',
+      url: downloadAPI,
+    }).then((response) => {
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: 'text/html' }),
 
+      );
+      const link = document.createElement('a');
+      link.href = url;
+      const filename = file.resultFile;
+      link.setAttribute(
+        'download',
+        filename,
+      );
+      // Append to html link element page
+      document.body.appendChild(link);
+
+      // Start download
+      link.click();
+
+      // Clean up and remove the link
+      URL.revokeObjectURL(url);
+    });
   };
 
   return (
