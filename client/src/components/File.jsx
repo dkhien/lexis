@@ -13,7 +13,6 @@ function File({ file, handleRemoveFile }) {
 
   const handleDownload = async () => {
     // TODO: Implement file download
-    // const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download`;
     const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download/${file.resultFile}`;
     await axios({
       method: 'get',

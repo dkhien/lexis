@@ -3,7 +3,7 @@ const path = require('path');
 
 const router = express.Router();
 
-/* GET home page. */
+/* GET result file to download. */
 router.get('/:resultFile', async (req, res) => {
   res.sendFile(path.join(__dirname, `../results/${req.params.resultFile}`));
 });
