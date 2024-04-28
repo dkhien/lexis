@@ -79,7 +79,7 @@ function FileUploadDropzone({ setFiles }) {
 
   return (
     <Box textAlign="center" sx={{ margin: '0 auto', marginTop: '10vh' }}>
-      <Typography variant="h4" fontWeight="bold">Dyslexia-friendly Document Converter</Typography>
+      <Typography variant="h4" fontWeight="bold">Dyslexia-friendly Document Reader</Typography>
       <Card sx={{ maxWidth: 900, margin: '0 auto', marginTop: '2rem' }}>
         <CardContent>
           <Box {...getRootProps({ style })}>
