@@ -45,6 +45,37 @@ async function generateHtml(ocrResults) {
   return htmlPaths;
 }
 
+async function generateJson(ocrResults) {
+  const objectPaths = {};
+
+  Object.keys(ocrResults).forEach(async (filename) => {
+    const results = ocrResults[filename];
+    const json = {
+      pages: 0,
+      content: [],
+    };
+
+    if (Array.isArray(results)) {
+      json.pages = results.length;
+      results.forEach((result) => {
+        json.content.push(result);
+      });
+    } else {
+      json.pages = 1;
+      json.content.push(results);
+    }
+    const jsonContent = JSON.stringify(json);
+    const filePath = path.join(__dirname, '../', Directory.RESULTS, `${filename}.json`);
+    writeContentToFile(filePath, jsonContent);
+
+    const parentDir = path.resolve(__dirname, '..');
+    const relativePath = filePath.replace(parentDir, '');
+    objectPaths[filename] = relativePath;
+  });
+
+  return objectPaths;
+}
+
 /**
  * Performs OCR (Optical Character Recognition) on the given files.
  * @param {Array} files The files to perform OCR on.
@@ -79,6 +110,7 @@ async function process(files) {
 
   // STEP 2: Generate HTML
   const htmlResults = await generateHtml(ocrResults);
+  await generateJson(ocrResults);
 
   // STEP 3: Return results
   const results = Object.keys(htmlResults).map((filename) => ({
