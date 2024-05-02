@@ -17,6 +17,7 @@ function File({ file, handleRemoveFile }) {
     await axios({
       method: 'get',
       url: downloadAPI,
+      responseType: 'blob',
     }).then((response) => {
       const url = window.URL.createObjectURL(
         new Blob([response.data]),
@@ -24,7 +25,7 @@ function File({ file, handleRemoveFile }) {
       );
       const link = document.createElement('a');
       link.href = url;
-      const filename = file.resultFile.replace('.html', '.json');
+      const filename = file.resultFile.replace('.html', '.zip');
       link.setAttribute(
         'download',
         filename,

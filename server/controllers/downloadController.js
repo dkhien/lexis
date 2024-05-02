@@ -4,7 +4,7 @@ const { Directory } = require('../utils/fileUtils');
 
 async function createZipFile(files) {
   const zip = new AdmZip();
-  const zipName = `results-${Date.now()}.zip`;
+  const zipName = `${files[0]}.zip`;
 
   files.forEach((file) => {
     const filePath = path.join(__dirname, '../', Directory.RESULTS, file);
@@ -14,10 +14,7 @@ async function createZipFile(files) {
   const zipPath = path.join(__dirname, '../', Directory.RESULTS, zipName);
   zip.writeZip(zipPath);
 
-  const zipBuffer = zip.toBuffer();
-
-  // return zipName;
-  return zipBuffer;
+  return zipName;
 }
 
 module.exports = {
