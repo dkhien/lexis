@@ -12,19 +12,19 @@ function File({ file, handleRemoveFile }) {
   const fileSize = convertSize(file.file.size);
 
   const handleDownload = async () => {
-    // TODO: Implement file download
     const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download/${file.resultFile}`;
     await axios({
       method: 'get',
       url: downloadAPI,
+      responseType: 'blob',
     }).then((response) => {
       const url = window.URL.createObjectURL(
-        new Blob([response.data], { type: 'text/html' }),
-
+        new Blob([response.data]),
+        { type: 'application/zip' },
       );
       const link = document.createElement('a');
       link.href = url;
-      const filename = file.resultFile;
+      const filename = `${file.resultFile}.zip`;
       link.setAttribute(
         'download',
         filename,

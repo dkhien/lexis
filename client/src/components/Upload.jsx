@@ -71,12 +71,8 @@ function Upload({ files, setFiles }) {
       },
     });
 
-    // TODO: Remove console.log
-    console.log('Response: ', response.data);
-
     filesToConvert = filesToConvert.map((file, index) => ({
       ...file,
-      resultPath: `${process.env.REACT_APP_SERVER_URL}${response.data[index].resultPath}`,
       resultFile: response.data[index].resultFile,
       state: State.DONE,
     }));
