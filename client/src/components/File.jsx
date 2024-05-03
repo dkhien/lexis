@@ -12,7 +12,6 @@ function File({ file, handleRemoveFile }) {
   const fileSize = convertSize(file.file.size);
 
   const handleDownload = async () => {
-    // TODO: Implement file download
     const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download/${file.resultFile}`;
     await axios({
       method: 'get',
@@ -25,7 +24,7 @@ function File({ file, handleRemoveFile }) {
       );
       const link = document.createElement('a');
       link.href = url;
-      const filename = file.resultFile.replace('.html', '.zip');
+      const filename = `${file.resultFile}.zip`;
       link.setAttribute(
         'download',
         filename,

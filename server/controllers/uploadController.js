@@ -114,8 +114,7 @@ async function process(files) {
 
   // STEP 3: Return results
   const results = Object.keys(htmlResults).map((filename) => ({
-    resultFile: `${filename}.html`,
-    resultPath: htmlResults[filename],
+    resultFile: `${filename}`,
   }));
   return results;
 }
