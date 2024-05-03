@@ -108,11 +108,11 @@ async function process(files) {
   // STEP 1: OCR
   const ocrResults = await ocr(files);
 
-  // STEP 2: Generate HTML
+  // STEP 2: Generate HTML and JSON files
   const htmlResults = await generateHtml(ocrResults);
   await generateJson(ocrResults);
 
-  // STEP 3: Return results
+  // STEP 3: Return result file name
   const results = Object.keys(htmlResults).map((filename) => ({
     resultFile: `${filename}`,
   }));

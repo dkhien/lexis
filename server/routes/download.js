@@ -7,7 +7,7 @@ const router = express.Router();
 /* GET result file to download. */
 router.get('/:resultFile', async (req, res, next) => {
   try {
-    const fileName = req.params.resultFile.replace('.html', '');
+    const fileName = req.params.resultFile;
     const files = [`${fileName}.html`, `${fileName}.json`];
     const zipFile = await createZipFile(files);
     res.sendFile(path.join(__dirname, `../results/${zipFile}`));
