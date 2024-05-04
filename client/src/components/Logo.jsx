@@ -1,8 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import logo from '../assets/images/logo.png';
 
-function Logo() {
-  const logoSize = '4rem';
+function Logo({ logoSize = '4rem' }) {
   return (
     <img
       src={logo}
@@ -15,4 +15,11 @@ function Logo() {
   );
 }
 
+Logo.propTypes = {
+  logoSize: PropTypes.string,
+};
+
+Logo.defaultProps = {
+  logoSize: '4rem',
+};
 export default Logo;

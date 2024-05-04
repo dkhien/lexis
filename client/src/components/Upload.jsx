@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import {
   Card, Box, Button, Fab,
 } from '@mui/material';
-import PropTypes from 'prop-types';
 
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,11 +10,16 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import File from './File';
 import State from '../constants';
+import useFileStore from '../store/fileStore';
 
-function Upload({ files, setFiles }) {
+function Upload() {
+  const [files, setFiles, removeFile, removeAllFiles] = useFileStore((state) => [
+    state.files, state.setFiles, state.removeFile, state.removeAllFiles]);
   const inputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isConverted, setIsConverted] = useState(false);
+
+  console.log(files);
 
   const addFile = (event) => {
     const inputFiles = event.target.files;
@@ -35,14 +39,6 @@ function Upload({ files, setFiles }) {
 
     // eslint-disable-next-line no-param-reassign
     event.target.value = null;
-  };
-
-  const removeFile = (fileToRemove) => {
-    setFiles(files.filter((file) => file.id !== fileToRemove));
-  };
-
-  const removeAllFiles = () => {
-    setFiles([]);
   };
 
   const handleUpload = () => {
@@ -159,10 +155,5 @@ function Upload({ files, setFiles }) {
     </Card>
   );
 }
-
-Upload.propTypes = {
-  files: PropTypes.arrayOf(PropTypes.instanceOf(Object)).isRequired,
-  setFiles: PropTypes.func.isRequired,
-};
 
 export default Upload;

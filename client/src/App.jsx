@@ -13,14 +13,17 @@ function App() {
     {
       path: '/',
       element: <Home />,
+      wrapInMainLayout: true,
     },
     {
       path: '/reader',
       element: <Reader />,
+      wrapInMainLayout: false,
     },
     {
       path: '*',
       element: <NotFound />,
+      wrapInMainLayout: true,
     },
   ];
 
@@ -29,17 +32,16 @@ function App() {
 
   return (
     <BrowserRouter>
-      <MainLayout>
-        <Routes>
-          {routes.map((route) => (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={route.element}
-            />
-          ))}
-        </Routes>
-      </MainLayout>
+      <Routes>
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={route.wrapInMainLayout
+              ? <MainLayout>{route.element}</MainLayout> : route.element}
+          />
+        ))}
+      </Routes>
     </BrowserRouter>
   );
 }

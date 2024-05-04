@@ -6,8 +6,8 @@ import {
 } from '@mui/material';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { v4 as uuidv4 } from 'uuid';
-import PropTypes from 'prop-types';
 import State from '../constants';
+import useFileStore from '../store/fileStore';
 
 const baseStyle = {
   display: 'flex',
@@ -35,7 +35,8 @@ const rejectStyle = {
   borderColor: '#F44336',
 };
 
-function FileUploadDropzone({ setFiles }) {
+function FileUploadDropzone() {
+  const setFiles = useFileStore((state) => state.setFiles);
   const [error, setError] = useState('');
 
   const {
@@ -61,7 +62,7 @@ function FileUploadDropzone({ setFiles }) {
           state: State.READY,
           file,
         }));
-        setFiles((prevFiles) => [...prevFiles, ...filesWithId]);
+        setFiles(filesWithId);
       }
     },
   });
@@ -104,9 +105,5 @@ function FileUploadDropzone({ setFiles }) {
     </Box>
   );
 }
-
-FileUploadDropzone.propTypes = {
-  setFiles: PropTypes.func.isRequired,
-};
 
 export default FileUploadDropzone;
