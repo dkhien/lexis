@@ -20,7 +20,7 @@ ReactDOM.render(
       <CssBaseline />
       <App />
     </ThemeProvider>
-    <EulexiaFab backgroundColor="#bc714e">
+    <EulexiaFab backgroundColor="#bc714e" style={{ right: 20, bottom: 20 }}>
       <FontSizeAction />
       <FontFamilyAction />
       <ColorChangeAction />
