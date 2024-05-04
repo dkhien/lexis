@@ -22,7 +22,7 @@ import { Link } from 'react-router-dom';
 import useFileStore from '../store/fileStore';
 import Logo from '../components/Logo';
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -89,7 +89,7 @@ export default function Reader() {
         position="fixed"
         open={open}
         sx={{
-          backgroundColor: 'transparent', boxShadow: 'none',
+          backgroundColor: theme.palette.background.paper, boxShadow: 'none',
         }}
       >
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -177,7 +177,7 @@ function ReadingArea({ open }) {
   return (
     <Main open={open}>
       <DrawerHeader />
-      <Box width="100%%" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box width="100%" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Box width="60%" align="justify">
           <Typography paragraph>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
