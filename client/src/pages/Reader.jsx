@@ -70,10 +70,22 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
+  padding: theme.spacing(2),
+  '&.Mui-selected, &.Mui-selected:hover': {
+    color: '#fff',
+    backgroundColor: theme.palette.secondary.main,
+    '& .MuiListItemIcon-root': {
+      color: '#fff',
+    },
+  },
+}));
+
 export default function Reader() {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const files = useFileStore((state) => state.files);
+  const [selectedFile, setSelectedFile] = useState(files[0] || null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -147,7 +159,11 @@ export default function Reader() {
           <List>
             {files.map((file) => (
               <ListItem key={file.id} disablePadding>
-                <ListItemButton>
+                <CustomListItemButton
+                  onClick={() => setSelectedFile(file)}
+                  selected={selectedFile && selectedFile.id === file.id}
+                  sx={{ padding: '1rem' }}
+                >
                   <ListItemIcon>
                     {file.file.type === 'application/pdf' ? (
                       <PictureAsPdfOutlined />
@@ -161,8 +177,9 @@ export default function Reader() {
                     overflow="hidden"
                     textOverflow="ellipsis"
                     title={file.file.name}
+                    disableTypography
                   />
-                </ListItemButton>
+                </CustomListItemButton>
               </ListItem>
             ))}
           </List>
