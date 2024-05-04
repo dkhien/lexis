@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   Card, Box, Button, Fab,
 } from '@mui/material';
@@ -13,13 +13,18 @@ import State from '../constants';
 import useFileStore from '../store/fileStore';
 
 function Upload() {
-  const [files, setFiles, removeFile, removeAllFiles] = useFileStore((state) => [
-    state.files, state.setFiles, state.removeFile, state.removeAllFiles]);
+  const [files, setFiles, addFiles, removeFile, removeAllFiles] = useFileStore((state) => [
+    state.files, state.setFiles, state.addFiles, state.removeFile, state.removeAllFiles]);
   const inputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isConverted, setIsConverted] = useState(false);
 
-  console.log(files);
+  useEffect(() => {
+    const allFilesDone = files.every((file) => file.state === State.DONE);
+    if (allFilesDone) {
+      setIsConverted(true);
+    }
+  }, [files]);
 
   const addFile = (event) => {
     const inputFiles = event.target.files;
@@ -34,7 +39,7 @@ function Upload() {
       file,
     }));
 
-    setFiles((prevFiles) => [...prevFiles, ...filesWithId]);
+    addFiles(filesWithId);
     setIsConverted(false);
 
     // eslint-disable-next-line no-param-reassign
@@ -50,6 +55,11 @@ function Upload() {
     setIsConverted(false);
 
     let filesToConvert = files.filter((file) => file.state !== State.DONE);
+
+    if (filesToConvert.length === 0) {
+      setIsLoading(false);
+      return;
+    }
 
     setFiles(files.map((file) => ({
       ...file,
