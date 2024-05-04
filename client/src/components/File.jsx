@@ -7,16 +7,25 @@ import FileInfo from './FileInfo';
 import convertSize from '../utils/unitConverter';
 
 const buttonSize = '2rem';
+const localStorageKeys = ['newTextColor', 'newLinkColor', 'newBackgroundColor', 'fontFamilyValue', 'headerFontSizeValue', 'textFontSizeValue'];
 
 function File({ file, handleRemoveFile }) {
   const fileSize = convertSize(file.file.size);
 
   const handleDownload = async () => {
+    // Get local storage style object
+    const localStorageData = {};
+    localStorageKeys.forEach((key) => {
+      if (localStorage.getItem(key)) {
+        localStorageData[key] = localStorage.getItem(key);
+      }
+    });
     // TODO: Implement file download
     const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download/${file.resultFile}`;
     await axios({
       method: 'get',
       url: downloadAPI,
+      params: { style: localStorageData },
     }).then((response) => {
       const url = window.URL.createObjectURL(
         new Blob([response.data], { type: 'text/html' }),

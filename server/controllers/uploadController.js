@@ -13,26 +13,27 @@ async function generateHtml(ocrResults) {
   const htmlPaths = {};
 
   Object.keys(ocrResults).forEach(async (filename) => {
-    let html = '<html><body>';
-    html += `<h1>${filename}</h1>`;
+    let html = '<html>\n<style></style>\n<head>\n</head>\n<body>\n';
+    html += `<h1>${filename}</h1>\n`;
     const results = ocrResults[filename];
 
     if (Array.isArray(results)) {
-      html += '<ul>';
+      html += '<ul>\n';
       results.forEach((result, index) => {
-        html += `<li><a href="#page-${index + 1}">Page ${index + 1}</a></li>`;
+        html += `<li><a href="#page-${index + 1}">Page ${index + 1}</a></li>\n`;
       });
-      html += '</ul>';
+      html += '\n</ul>\n';
 
       results.forEach((result, index) => {
-        html += `<h2 id="page-${index + 1}">Page ${index + 1}</h2>`;
-        html += `<p>${result}</p>`;
+        html += `<h2 id="page-${index + 1}">Page ${index + 1}</h2>\n`;
+        html += `<p>\n${result}\n</p>\n`;
       });
     } else {
-      html += `<p>${results}</p>`;
+      html += `\n<p>${results}</p>\n`;
     }
-
-    html += '</body></html>';
+    // Replace newlines with <br> tags
+    html = html.replace(/\n/g, '<br>\n');
+    html += '\n</body>\n</html>\n';
 
     const filePath = path.join(__dirname, '../', Directory.RESULTS, `${filename}.html`);
     writeContentToFile(filePath, html);
