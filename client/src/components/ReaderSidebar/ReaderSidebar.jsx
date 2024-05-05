@@ -18,6 +18,7 @@ import Logo from '../common/Logo';
 import FileTypeIcon from '../common/FileTypeIcon';
 import DrawerHeader from './DrawerHeader';
 import useDocumentStore from '../../store/documentStore';
+import { MimeType, LexisDocumentType } from '../../constants';
 
 const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -89,15 +90,19 @@ function ReaderSidebar({
                 sx={{ padding: '1rem' }}
               >
                 <ListItemIcon>
-                  <FileTypeIcon fileType={doc.file.type} />
+                  <FileTypeIcon
+                    fileType={
+                      document.type === LexisDocumentType.FILE ? document.file.type : MimeType.TEXT
+                    }
+                  />
                 </ListItemIcon>
                 <ListItemText
                   disableTypography
-                  primary={doc.file.name}
+                  primary={doc.name}
                   whiteSpace="nowrap"
                   overflow="hidden"
                   textOverflow="ellipsis"
-                  title={doc.file.name}
+                  title={doc.type === MimeType.TEXT ? doc.content[0] : doc.name}
                 />
               </CustomListItemButton>
             </ListItem>

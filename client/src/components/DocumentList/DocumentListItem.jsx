@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import ButtonStack from './ButtonStack';
 import DocumentInfo from './DocumentInfo';
+import { LexisDocumentType, MimeType } from '../../constants';
 import convertSize from '../../utils/unitConverter';
 
 function DocumentListItem({ document }) {
-  const fileSize = document.file.size && document.file.size > 0 ? convertSize(document.file.size) : '';
+  const fileSize = document.type === LexisDocumentType.FILE ? convertSize(document.file.size) : '';
 
   const handleDownload = async () => {
     const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download/${document.resultFile}`;
@@ -18,7 +19,7 @@ function DocumentListItem({ document }) {
     }).then((response) => {
       const url = window.URL.createObjectURL(
         new Blob([response.data]),
-        { type: 'application/zip' },
+        { type: MimeType.ZIP },
       );
       const link = window.document.createElement('a');
       link.href = url;
@@ -48,8 +49,8 @@ function DocumentListItem({ document }) {
         width="100%"
       >
         <DocumentInfo
-          name={document.file.name}
-          type={document.file.type}
+          name={document.name}
+          type={document.type === LexisDocumentType.FILE ? document.file.type : MimeType.TEXT}
           content={document.content}
           size={fileSize}
         />
@@ -72,10 +73,12 @@ DocumentListItem.propTypes = {
       name: PropTypes.string.isRequired,
       size: PropTypes.number.isRequired,
       type: PropTypes.string.isRequired,
-    }).isRequired,
+    }),
     id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
     state: PropTypes.string.isRequired,
-    content: PropTypes.string,
+    content: PropTypes.arrayOf(PropTypes.string),
     resultPath: PropTypes.string,
     resultFile: PropTypes.string,
   }).isRequired,

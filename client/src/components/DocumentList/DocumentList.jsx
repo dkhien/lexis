@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import DocumentListItem from './DocumentListItem';
-import State from '../../constants';
+import { State, LexisDocumentType } from '../../constants';
 import useDocumentStore from '../../store/documentStore';
 import UploadModal from '../UploadModal';
 
@@ -33,7 +33,7 @@ function DocumentList() {
     setIsLoading(true);
     setIsConverted(false);
 
-    let docsToConvert = documents.filter((doc) => doc.state !== State.DONE);
+    const docsToConvert = documents.filter((doc) => doc.state !== State.DONE);
 
     if (docsToConvert.length === 0) {
       setIsLoading(false);
@@ -45,10 +45,21 @@ function DocumentList() {
       state: docsToConvert.includes(doc) ? State.PROCESSING : doc.state,
     })));
 
+    let textDocs = docsToConvert.filter((doc) => doc.type === LexisDocumentType.TEXT);
+    let fileDocs = docsToConvert.filter((doc) => doc.type === LexisDocumentType.FILE);
+
     const formData = new FormData();
-    docsToConvert.forEach((doc) => {
+
+    fileDocs.forEach((doc) => {
       formData.append('files', doc.file);
     });
+
+    formData.append('text-docs', JSON.stringify(textDocs.map((doc) => ({
+      id: doc.id,
+      name: doc.name,
+      content: doc.content,
+    }))));
+
     const uploadApi = `${process.env.REACT_APP_SERVER_URL}/api/upload`;
     const response = await axios.post(uploadApi, formData, {
       headers: {
@@ -56,17 +67,28 @@ function DocumentList() {
       },
     });
 
-    docsToConvert = docsToConvert.map((doc, index) => ({
+    const { fileResults, textResults } = response.data;
+
+    fileDocs = fileDocs.map((doc, index) => ({
       ...doc,
-      resultFile: response.data[index].resultFile,
+      resultFile: fileResults[index].resultFile,
+      content: fileResults[index].content,
       state: State.DONE,
     }));
 
+    textDocs = textDocs.map((doc, index) => ({
+      ...doc,
+      resultFile: textResults[index].resultFile,
+      state: State.DONE,
+    }));
+
+    const convertedDocs = [...fileDocs, ...textDocs];
+    console.log(convertedDocs);
     setIsLoading(false);
     setIsConverted(true);
 
     setDocuments(documents.map((doc) => (
-      docsToConvert.find((convertedDoc) => convertedDoc.id === doc.id) || doc
+      convertedDocs.find((convertedDoc) => convertedDoc.id === doc.id) || doc
     )));
   };
 

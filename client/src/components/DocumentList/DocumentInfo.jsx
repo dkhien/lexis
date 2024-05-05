@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 import FileTypeIcon from '../common/FileTypeIcon';
+import { MimeType } from '../../constants';
 
 function DocumentInfo({
   name, type, size, content,
@@ -14,7 +15,7 @@ function DocumentInfo({
         whiteSpace="nowrap"
         overflow="hidden"
         textOverflow="ellipsis"
-        title={type === 'text/plain' ? content : name}
+        title={type === MimeType.TEXT ? content[0] : name}
       >
         {name}
       </Typography>
@@ -27,11 +28,11 @@ DocumentInfo.propTypes = {
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   size: PropTypes.string.isRequired,
-  content: PropTypes.string,
+  content: PropTypes.arrayOf(PropTypes.string),
 };
 
 DocumentInfo.defaultProps = {
-  content: '',
+  content: [],
 };
 
 export default DocumentInfo;
