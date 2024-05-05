@@ -7,7 +7,7 @@ import {
 import {
   Button, IconButton, CircularProgress, Stack, Box,
 } from '@mui/material';
-import State from '../../constants';
+import { State } from '../../constants';
 import useDocumentStore from '../../store/documentStore';
 
 function ButtonStack({

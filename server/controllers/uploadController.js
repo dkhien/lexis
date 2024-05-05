@@ -2,7 +2,9 @@ const path = require('path');
 const { imagesToText } = require('../services/tesseract');
 const { convertPdf } = require('../services/poppler');
 const winstonLogger = require('../utils/logger');
-const { writeContentToFile, Directory, MimeType } = require('../utils/fileUtils');
+const {
+  writeContentToFile, normalizeFileName, Directory, MimeType,
+} = require('../utils/fileUtils');
 
 /**
  * Generates HTML content based on OCR results.
@@ -104,7 +106,7 @@ async function ocr(files) {
   return ocrResults;
 }
 
-async function process(files) {
+async function processFiles(files) {
   // STEP 1: OCR
   const ocrResults = await ocr(files);
 
@@ -115,8 +117,25 @@ async function process(files) {
   // STEP 3: Return result file name
   const results = Object.keys(htmlResults).map((filename) => ({
     resultFile: `${filename}`,
+    content: ocrResults[filename],
   }));
   return results;
 }
 
-module.exports = { process };
+async function processTexts(textDocs) {
+  const textContents = {};
+  textDocs.forEach((doc) => {
+    const resultFileName = `${normalizeFileName(doc.name)}-${doc.id}`;
+    textContents[resultFileName] = doc.content;
+  });
+  const htmlResults = await generateHtml(textContents);
+  await generateJson(textContents);
+
+  const results = Object.keys(htmlResults).map((filename) => ({
+    resultFile: `${filename}`,
+  }));
+
+  return results;
+}
+
+module.exports = { processFiles, processTexts };

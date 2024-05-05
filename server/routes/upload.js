@@ -1,6 +1,6 @@
 const express = require('express');
 const upload = require('../middlewares/multer');
-const { process } = require('../controllers/uploadController');
+const { processFiles, processTexts } = require('../controllers/uploadController');
 
 const router = express.Router();
 
@@ -8,14 +8,20 @@ const router = express.Router();
 router.post('/', upload.array('files'), async (req, res, next) => {
   try {
     const { files } = req;
-    if (!files || files.length === 0) {
-      const error = new Error('Please choose files');
+    const textDocs = JSON.parse(req.body['text-docs']);
+
+    if ((!files || files.length === 0) && (!textDocs || textDocs.length === 0)) {
+      const error = new Error('Empty documents. Please upload at least one file or enter some text.');
       error.httpStatusCode = 400;
       throw error;
     }
+    const fileResults = await processFiles(files);
+    const textResults = await processTexts(textDocs);
 
-    const result = await process(files);
-    res.send(result);
+    res.send({
+      fileResults,
+      textResults,
+    });
   } catch (error) {
     next(error);
   }

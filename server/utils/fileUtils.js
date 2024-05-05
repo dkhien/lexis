@@ -33,8 +33,28 @@ const writeContentToFile = (filePath, content) => {
   }
 };
 
+/**
+ * Normalizes a file name to avoid file operation errors.
+ *
+ * @param {string} fileName - The original file name.
+ * @returns {string} The normalized file name.
+ */
+const normalizeFileName = (fileName) => {
+  // Remove accents (for example, in Vietnamese words)
+  let normalizedFileName = fileName.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+
+  // Replace spaces with hyphens
+  normalizedFileName = normalizedFileName.replace(/\s/g, '-');
+
+  // Remove all special characters
+  normalizedFileName = normalizedFileName.replace(/[^a-zA-Z0-9-]/g, '');
+
+  return normalizedFileName;
+};
+
 module.exports = {
   writeContentToFile,
+  normalizeFileName,
   Directory,
   MimeType,
 };

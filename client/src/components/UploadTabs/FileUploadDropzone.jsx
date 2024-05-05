@@ -7,8 +7,9 @@ import {
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
-import State from '../../constants';
+import { State, LexisDocumentType } from '../../constants';
 import useDocumentStore from '../../store/documentStore';
+import { isImageFile, isPDFFile } from '../../utils/fileUtils';
 
 const baseStyle = {
   display: 'flex',
@@ -56,11 +57,14 @@ function FileUploadDropzone({ closeModal }) {
         setError('Invalid file type. Please upload a PDF or an image file.');
       } else {
         const filteredFiles = acceptedFiles.filter(
-          (file) => file.type === 'application/pdf' || file.type.startsWith('image/'),
+          (file) => isPDFFile(file.type) || isImageFile(file.type),
         );
         const newDocuments = filteredFiles.map((file) => ({
           id: uuidv4(),
+          name: file.name,
           state: State.READY,
+          type: LexisDocumentType.FILE,
+          content: [], // content will be populated after OCR
           file,
         }));
         addDocuments(newDocuments);

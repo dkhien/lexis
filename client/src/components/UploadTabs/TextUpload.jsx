@@ -1,33 +1,41 @@
 import React, { useState } from 'react';
 import {
-  TextField, Button, Box,
+  TextField, Button, Box, Snackbar,
 } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import useDocumentStore from '../../store/documentStore';
-import State from '../../constants';
+import { LexisDocumentType, State } from '../../constants';
 
 function TextUpload({ closeModal }) {
   const documents = useDocumentStore((state) => state.documents);
   const addDocument = useDocumentStore((state) => state.addDocument);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   const handleUpload = () => {
-    const existingTextDocs = documents.filter((doc) => doc.file.type === 'text/plain' && doc.file.name.startsWith('Text'));
+    if (content.trim() === '') {
+      setShowToast(true);
+      return;
+    }
+
+    const existingTextDocs = documents.filter((doc) => doc.type === LexisDocumentType.TEXT && doc.name.startsWith('Text'));
     const index = existingTextDocs.length + 1;
-    const fileName = title || `Text ${index}`;
+    const docName = title || `Text ${index}`;
     addDocument({
       id: uuidv4(),
-      state: State.DONE,
-      file: {
-        name: fileName,
-        size: -1, // text input does not have a size
-        type: 'text/plain',
-      },
-      content,
+      state: State.READY,
+      type: LexisDocumentType.TEXT,
+      file: null,
+      name: docName,
+      content: [content],
     });
     closeModal();
+  };
+
+  const handleCloseToast = () => {
+    setShowToast(false);
   };
 
   return (
@@ -58,6 +66,12 @@ function TextUpload({ closeModal }) {
       >
         Upload
       </Button>
+      <Snackbar
+        open={showToast}
+        autoHideDuration={3000}
+        onClose={handleCloseToast}
+        message="Content cannot be empty"
+      />
     </Box>
   );
 }
