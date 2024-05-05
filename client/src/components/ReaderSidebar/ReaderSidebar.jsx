@@ -72,7 +72,7 @@ function ReaderSidebar({
       </DrawerHeader>
       {documents.length === 0 ? (
         <Typography variant="body1" align="center" marginTop="1rem">
-          No files available
+          No document available
         </Typography>
       ) : (
         <List>
@@ -92,16 +92,14 @@ function ReaderSidebar({
                 <ListItemIcon>
                   <FileTypeIcon
                     fileType={
-                      document.type === LexisDocumentType.FILE ? document.file.type : MimeType.TEXT
+                      doc.type === LexisDocumentType.FILE ? doc.file.type : MimeType.TEXT
                     }
                   />
                 </ListItemIcon>
                 <ListItemText
                   disableTypography
                   primary={doc.name}
-                  whiteSpace="nowrap"
                   overflow="hidden"
-                  textOverflow="ellipsis"
                   title={doc.type === MimeType.TEXT ? doc.content[0] : doc.name}
                 />
               </CustomListItemButton>

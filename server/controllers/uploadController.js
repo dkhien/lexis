@@ -117,7 +117,7 @@ async function processFiles(files) {
   // STEP 3: Return result file name
   const results = Object.keys(htmlResults).map((filename) => ({
     resultFile: `${filename}`,
-    content: ocrResults[filename],
+    content: Array.isArray(ocrResults[filename]) ? ocrResults[filename] : [ocrResults[filename]],
   }));
   return results;
 }

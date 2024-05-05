@@ -83,7 +83,7 @@ function DocumentList() {
     }));
 
     const convertedDocs = [...fileDocs, ...textDocs];
-    console.log(convertedDocs);
+
     setIsLoading(false);
     setIsConverted(true);
 
