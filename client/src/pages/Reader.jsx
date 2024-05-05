@@ -107,13 +107,14 @@ function ReadingArea({ open, selectedDoc }) {
       <DrawerHeader />
       <Box width="100%" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Box width="60%" align="justify">
-          <Typography paragraph>
-            {selectedDoc ? selectedDoc.content : 'No document selected'}
-          </Typography>
+          {/* TODO: Display the pages with proper pagination */}
+          {selectedDoc ? selectedDoc.content.map((page, index) => (
+            <Typography key={`${selectedDoc.id}page${index + 1}`} paragraph>
+              {page}
+            </Typography>
+          )) : <Typography>No document selected</Typography>}
         </Box>
-
       </Box>
-
     </Main>
   );
 }
