@@ -7,13 +7,15 @@ import {
 import {
   Button, IconButton, CircularProgress, Stack, Box,
 } from '@mui/material';
-import State from '../constants';
+import State from '../../constants';
+import useDocumentStore from '../../store/documentStore';
 
 function ButtonStack({
-  fileId, fileState, buttonSize, handleRemoveFile, handleDownload,
+  documentId, documentState, buttonSize = '2rem', handleDownload,
 }) {
+  const removeDocument = useDocumentStore((state) => state.removeDocument);
   let dynamicControls;
-  switch (fileState) {
+  switch (documentState) {
     case State.PROCESSING:
       dynamicControls = (
         <Box display="flex" alignItems="center">
@@ -57,7 +59,7 @@ function ButtonStack({
       justifyContent="flex-end"
     >
       {dynamicControls}
-      <IconButton onClick={() => handleRemoveFile(fileId)}>
+      <IconButton onClick={() => removeDocument(documentId)}>
         <CloseOutlined sx={{ height: buttonSize, width: buttonSize }} />
       </IconButton>
     </Stack>
@@ -65,10 +67,9 @@ function ButtonStack({
 }
 
 ButtonStack.propTypes = {
-  fileId: PropTypes.string.isRequired,
-  fileState: PropTypes.string.isRequired,
+  documentId: PropTypes.string.isRequired,
+  documentState: PropTypes.string.isRequired,
   buttonSize: PropTypes.string,
-  handleRemoveFile: PropTypes.func.isRequired,
   handleDownload: PropTypes.func.isRequired,
 };
 

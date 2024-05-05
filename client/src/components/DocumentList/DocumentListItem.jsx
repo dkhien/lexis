@@ -3,16 +3,14 @@ import { Box, Divider } from '@mui/material';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import ButtonStack from './ButtonStack';
-import FileInfo from './FileInfo';
-import convertSize from '../utils/unitConverter';
+import DocumentInfo from './DocumentInfo';
+import convertSize from '../../utils/unitConverter';
 
-const buttonSize = '2rem';
-
-function File({ file, handleRemoveFile }) {
-  const fileSize = convertSize(file.file.size);
+function DocumentListItem({ document }) {
+  const fileSize = document.file.size && document.file.size > 0 ? convertSize(document.file.size) : '';
 
   const handleDownload = async () => {
-    const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download/${file.resultFile}`;
+    const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download/${document.resultFile}`;
     await axios({
       method: 'get',
       url: downloadAPI,
@@ -22,15 +20,15 @@ function File({ file, handleRemoveFile }) {
         new Blob([response.data]),
         { type: 'application/zip' },
       );
-      const link = document.createElement('a');
+      const link = window.document.createElement('a');
       link.href = url;
-      const filename = `${file.resultFile}.zip`;
+      const filename = `${document.resultFile}.zip`;
       link.setAttribute(
         'download',
         filename,
       );
       // Append to html link element page
-      document.body.appendChild(link);
+      window.document.body.appendChild(link);
 
       // Start download
       link.click();
@@ -46,20 +44,19 @@ function File({ file, handleRemoveFile }) {
         display="flex"
         alignItems="center"
         justifyContent="space-between"
+        paddingRight="1em"
         width="100%"
       >
-        <FileInfo
-          fileName={file.file.name}
-          fileType={file.file.type}
-          fileSize={fileSize}
-          iconSize={buttonSize}
+        <DocumentInfo
+          name={document.file.name}
+          type={document.file.type}
+          content={document.content}
+          size={fileSize}
         />
         <Box display="flex" alignItems="center" gap={2}>
           <ButtonStack
-            fileId={file.id}
-            fileState={file.state}
-            buttonSize={buttonSize}
-            handleRemoveFile={handleRemoveFile}
+            documentId={document.id}
+            documentState={document.state}
             handleDownload={handleDownload}
           />
         </Box>
@@ -69,8 +66,8 @@ function File({ file, handleRemoveFile }) {
   );
 }
 
-File.propTypes = {
-  file: PropTypes.shape({
+DocumentListItem.propTypes = {
+  document: PropTypes.shape({
     file: PropTypes.shape({
       name: PropTypes.string.isRequired,
       size: PropTypes.number.isRequired,
@@ -78,10 +75,10 @@ File.propTypes = {
     }).isRequired,
     id: PropTypes.string.isRequired,
     state: PropTypes.string.isRequired,
+    content: PropTypes.string,
     resultPath: PropTypes.string,
     resultFile: PropTypes.string,
   }).isRequired,
-  handleRemoveFile: PropTypes.func.isRequired,
 };
 
-export default File;
+export default DocumentListItem;
