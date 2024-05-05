@@ -1,7 +1,7 @@
 import { AppBar, Container, Box } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../components/Logo';
+import Logo from '../components/common/Logo';
 
 function Header() {
   return (

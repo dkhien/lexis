@@ -1,19 +1,29 @@
 import React from 'react';
-import FileUploadDropzone from '../components/FileUploadDropzone';
-import Upload from '../components/Upload';
-import useFileStore from '../store/fileStore';
+import Box from '@mui/material/Box';
+import UploadDialog from '../components/UploadDialog';
+import DocumentList from '../components/DocumentList/DocumentList';
+import useDocumentStore from '../store/documentStore';
 
 function Home() {
-  const files = useFileStore((state) => state.files);
+  const documents = useDocumentStore((state) => state.documents);
 
   return (
-    <div>
-      {files.length === 0 ? (
-        <FileUploadDropzone />
+    <Box>
+      {documents.length === 0 ? (
+        <Box
+          textAlign="center"
+          sx={{
+            margin: '0 auto', marginTop: '5vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          <Box width="60%">
+            <UploadDialog />
+          </Box>
+        </Box>
       ) : (
-        <Upload />
+        <DocumentList />
       )}
-    </div>
+    </Box>
   );
 }
 

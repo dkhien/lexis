@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import logo from '../assets/images/logo.png';
+import logo from '../../assets/images/logo.png';
 
 function Logo({ logoSize = '4rem' }) {
   return (

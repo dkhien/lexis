@@ -1,26 +1,16 @@
 import { React, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
-import { PictureAsPdfOutlined, ImageOutlined } from '@mui/icons-material';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import useFileStore from '../store/fileStore';
-import Logo from '../components/Logo';
+import DrawerHeader from '../components/ReaderSidebar/DrawerHeader';
+import useDocumentStore from '../store/documentStore';
+import ReaderSidebar from '../components/ReaderSidebar';
 
 const drawerWidth = 300;
 
@@ -62,37 +52,14 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
-}));
-
-const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
-  padding: theme.spacing(2),
-  '&.Mui-selected, &.Mui-selected:hover': {
-    color: '#fff',
-    backgroundColor: theme.palette.secondary.main,
-    '& .MuiListItemIcon-root': {
-      color: '#fff',
-    },
-  },
-}));
-
 export default function Reader() {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const files = useFileStore((state) => state.files);
-  const [selectedFile, setSelectedFile] = useState(files[0] || null);
+  const documents = useDocumentStore((state) => state.documents);
+  const [selectedDoc, setSelectedDoc] = useState(documents[0] || null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
   };
 
   return (
@@ -122,69 +89,13 @@ export default function Reader() {
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-            backgroundColor: theme.palette.background.default,
-          },
-        }}
-        variant="persistent"
-        anchor="left"
+      <ReaderSidebar
+        selectedDoc={selectedDoc}
+        setSelectedDoc={setSelectedDoc}
+        drawerWidth={drawerWidth}
         open={open}
-      >
-        <DrawerHeader>
-          <Box sx={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', flexGrow: 1,
-          }}
-          >
-            <Link to="/">
-              <Logo logoSize="2.2rem" />
-            </Link>
-            <IconButton onClick={handleDrawerClose} sx={{ position: 'absolute', right: 10 }}>
-              {theme.direction === 'ltr' ? <ChevronRightIcon color="primary" /> : <ChevronLeftIcon color="primary" />}
-            </IconButton>
-          </Box>
-        </DrawerHeader>
-        <Divider />
-        {files.length === 0 ? (
-          <Typography variant="body1" align="center" marginTop="1rem">
-            No files available
-          </Typography>
-        ) : (
-          <List>
-            {files.map((file) => (
-              <ListItem key={file.id} disablePadding>
-                <CustomListItemButton
-                  onClick={() => setSelectedFile(file)}
-                  selected={selectedFile && selectedFile.id === file.id}
-                  sx={{ padding: '1rem' }}
-                >
-                  <ListItemIcon>
-                    {file.file.type === 'application/pdf' ? (
-                      <PictureAsPdfOutlined />
-                    ) : (
-                      <ImageOutlined />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={file.file.name}
-                    whiteSpace="nowrap"
-                    overflow="hidden"
-                    textOverflow="ellipsis"
-                    title={file.file.name}
-                    disableTypography
-                  />
-                </CustomListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        )}
-      </Drawer>
+        setOpen={setOpen}
+      />
       <ReadingArea open={open} />
     </Box>
   );

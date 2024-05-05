@@ -6,8 +6,9 @@ import {
 } from '@mui/material';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { v4 as uuidv4 } from 'uuid';
-import State from '../constants';
-import useFileStore from '../store/fileStore';
+import PropTypes from 'prop-types';
+import State from '../../constants';
+import useDocumentStore from '../../store/documentStore';
 
 const baseStyle = {
   display: 'flex',
@@ -35,8 +36,8 @@ const rejectStyle = {
   borderColor: '#F44336',
 };
 
-function FileUploadDropzone() {
-  const setFiles = useFileStore((state) => state.setFiles);
+function FileUploadDropzone({ closeModal }) {
+  const addDocuments = useDocumentStore((state) => state.addDocuments);
   const [error, setError] = useState('');
 
   const {
@@ -57,12 +58,13 @@ function FileUploadDropzone() {
         const filteredFiles = acceptedFiles.filter(
           (file) => file.type === 'application/pdf' || file.type.startsWith('image/'),
         );
-        const filesWithId = filteredFiles.map((file) => ({
+        const newDocuments = filteredFiles.map((file) => ({
           id: uuidv4(),
           state: State.READY,
           file,
         }));
-        setFiles(filesWithId);
+        addDocuments(newDocuments);
+        closeModal();
       }
     },
   });
@@ -79,9 +81,8 @@ function FileUploadDropzone() {
   };
 
   return (
-    <Box textAlign="center" sx={{ margin: '0 auto', marginTop: '10vh' }}>
-      <Typography variant="h4" fontWeight="bold">Dyslexia-friendly Document Reader</Typography>
-      <Card sx={{ maxWidth: 900, margin: '0 auto', marginTop: '2rem' }}>
+    <>
+      <Card sx={{ maxWidth: 900, margin: '0 auto', boxShadow: 'none' }}>
         <CardContent>
           <Box {...getRootProps({ style })}>
             <input {...getInputProps()} />
@@ -102,8 +103,16 @@ function FileUploadDropzone() {
         onClose={handleCloseError}
         message={error}
       />
-    </Box>
+    </>
   );
 }
+
+FileUploadDropzone.propTypes = {
+  closeModal: PropTypes.func,
+};
+
+FileUploadDropzone.defaultProps = {
+  closeModal: () => {},
+};
 
 export default FileUploadDropzone;
