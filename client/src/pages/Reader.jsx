@@ -54,7 +54,7 @@ const AppBar = styled(MuiAppBar, {
 
 export default function Reader() {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const documents = useDocumentStore((state) => state.documents);
   const [selectedDoc, setSelectedDoc] = useState(documents[0] || null);
 
