@@ -5,6 +5,7 @@ import {
 import Home from './pages/Home';
 import Reader from './pages/Reader';
 import NotFound from './pages/NotFound';
+import Summary from './pages/Summary';
 import MainLayout from './layout/MainLayout';
 
 function App() {
@@ -23,6 +24,11 @@ function App() {
       path: '*',
       element: <NotFound />,
       wrapInMainLayout: true,
+    },
+    {
+      path: '/summary',
+      element: <Summary />,
+      wrapInMainLayout: false,
     },
   ];
 
