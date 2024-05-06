@@ -26,14 +26,14 @@ function File({ file, handleRemoveFile }) {
       method: 'get',
       url: downloadAPI,
       params: { style: localStorageData },
+      responseType: 'blob',
     }).then((response) => {
       const url = window.URL.createObjectURL(
-        new Blob([response.data], { type: 'text/html' }),
-
+        new Blob([response.data], { type: 'application/pdf' }),
       );
       const link = document.createElement('a');
       link.href = url;
-      const filename = file.resultFile;
+      const filename = `${file.resultFile}.pdf`;
       link.setAttribute(
         'download',
         filename,

@@ -7,10 +7,10 @@ const router = express.Router();
 
 /* GET result file to download. */
 router.get('/:resultFile', async (req, res) => {
-  style = req.query.style;
-  file = req.params.resultFile;
+  const { style } = req.query;
+  const file = req.params.resultFile;
   try {
-    let result = await convertToPdf.addStyleAndConvertToPdf(file, style);
+    const result = await convertToPdf.addStyleAndConvertToPdf(file, style);
     res.sendFile(path.join(result));
   } catch (error) {
     winstonLogger.error(`Error adding style to HTML: ${error}`);
