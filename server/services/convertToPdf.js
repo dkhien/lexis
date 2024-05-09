@@ -37,11 +37,12 @@ function addStyleToHtml(fileName, style) {
 
   html = html.replace(/<style>[\s\S]*?<\/style>/g, `<style>\n${styleTag}</style>`);
 
-  return html;
+  fs.writeFileSync(filePath, html);
 }
 
-async function convertHtmlToPdf(fileName, htmlContent) {
+async function convertHtmlToPdf(fileName) {
   const normalizedFileName = fileName.replace('.html', '.pdf');
+  const htmlPath = path.join(__dirname, '../', Directory.RESULTS, fileName);
   const pdfPath = path.join(__dirname, '../', Directory.RESULTS, normalizedFileName);
 
   try {
@@ -51,9 +52,7 @@ async function convertHtmlToPdf(fileName, htmlContent) {
     // To reflect CSS used for screens instead of print
     await page.emulateMediaType('screen');
 
-    await page.setContent(htmlContent, {
-      waitUntil: 'domcontentloaded',
-    });
+    await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle0' });
 
     await page.pdf({
       path: pdfPath,
@@ -71,8 +70,8 @@ async function convertHtmlToPdf(fileName, htmlContent) {
 }
 
 async function addStyleAndConvertToPdf(fileName, style) {
-  const html = addStyleToHtml(fileName, style);
-  return convertHtmlToPdf(fileName, html);
+  addStyleToHtml(fileName, style);
+  return convertHtmlToPdf(fileName);
 }
 
 exports.addStyleAndConvertToPdf = addStyleAndConvertToPdf;
