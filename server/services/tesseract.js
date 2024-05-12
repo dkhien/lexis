@@ -31,15 +31,14 @@ async function imageToText(image, language = 'eng') {
 /**
  * Converts an array of images to text using OCR (Optical Character Recognition).
  * @param {string[]} images - Paths of input images.
- * @param {string} [language='eng'] - Language of the text. Defaults to 'eng' (English).
  * @returns {Promise<string[]>} A promise that resolves to an array of recognized texts.
  */
-async function imagesToText(images, language = 'eng') {
+async function imagesToText(images) {
   winstonLogger.info(`Converting ${images.length} images to text...`);
   let converted = 0;
   try {
     const results = await Promise.all(images.map(async (image) => {
-      const text = await imageToText(image, language);
+      const text = await imageToText(image.file, image.language);
       converted += 1;
       winstonLogger.info(`Converted ${converted}/${images.length} images`);
       return text;

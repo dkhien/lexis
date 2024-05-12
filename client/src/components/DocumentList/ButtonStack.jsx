@@ -50,7 +50,7 @@ function ButtonStack({
       break;
     case State.READY:
       dynamicControls = (
-        <LanguageSelect documentId={document.id} />
+        <LanguageSelect documentId={documentId} />
       );
       break;
     default:

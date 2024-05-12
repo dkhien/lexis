@@ -83,22 +83,35 @@ async function generateJson(ocrResults) {
  * @param {Array} files The files to perform OCR on.
  * @returns {Object} An object containing the OCR results for each file.
  */
-async function ocr(files) {
+async function ocr(files, fileDocs) {
+  const filesWithInfo = files.map((file, index) => ({
+    file,
+    language: fileDocs[index].language,
+  }));
+  console.log(filesWithInfo);
   const ocrResults = {};
 
   // OCR for images
-  const imageFiles = files.filter((file) => file.mimetype !== MimeType.PDF);
-  const imageResults = await imagesToText(imageFiles.map((file) => file.path));
+  const imageFiles = filesWithInfo.filter((file) => file.file.mimetype !== MimeType.PDF);
+  const imageResults = await imagesToText(imageFiles.map((image) => ({
+    ...image,
+    file: image.file.path,
+  })));
   imageResults.forEach((result, index) => {
     ocrResults[imageFiles[index].filename] = result;
   });
 
   // OCR for PDFs
-  const pdfFiles = files.filter((file) => file.mimetype === MimeType.PDF);
+  const pdfFiles = filesWithInfo.filter((file) => file.file.mimetype === MimeType.PDF);
+  console.log(pdfFiles);
   await Promise.all(pdfFiles.map(async (file) => {
     // Convert PDF to images and OCR each image
     winstonLogger.info(`Converting PDF to image: ${file.filename}`);
-    const imagePaths = await convertPdf(file.path);
+    let imagePaths = await convertPdf(file.file.path);
+    imagePaths = imagePaths.map((image) => ({
+      file: image,
+      language: file.language,
+    }));
     const pdfResults = await imagesToText(imagePaths);
     ocrResults[file.filename] = pdfResults;
   }));
@@ -106,9 +119,9 @@ async function ocr(files) {
   return ocrResults;
 }
 
-async function processFiles(files) {
+async function processFiles(files, fileDocs) {
   // STEP 1: OCR
-  const ocrResults = await ocr(files);
+  const ocrResults = await ocr(files, fileDocs);
 
   // STEP 2: Generate HTML and JSON files
   const htmlResults = await generateHtml(ocrResults);

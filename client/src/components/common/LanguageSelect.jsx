@@ -5,14 +5,18 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import PropTypes from 'prop-types';
 import useDocumentStore from '../../store/documentStore';
+import { Languages } from '../../constants';
 
 export default function LanguageSelect({ documentId }) {
-  const [language, setLanguage] = React.useState('');
+  const [language, setLanguage] = React.useState(Languages.English);
   const addLanguageToDocument = useDocumentStore((state) => state.addLanguageToDocument);
+  const documents = useDocumentStore((state) => state.documents);
 
   const handleChange = (event) => {
+    console.log(event.target.value);
     setLanguage(event.target.value);
     addLanguageToDocument(documentId, language);
+    console.log(documents);
   };
 
   return (
@@ -24,11 +28,8 @@ export default function LanguageSelect({ documentId }) {
           displayEmpty
           inputProps={{ 'aria-label': 'Without label' }}
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value="vi">Vietnamese</MenuItem>
-          <MenuItem value="en">English</MenuItem>
+          <MenuItem value={Languages.English}>English</MenuItem>
+          <MenuItem value={Languages.Vietnamese}>Vietnamese</MenuItem>
         </Select>
         <FormHelperText>Select Language</FormHelperText>
       </FormControl>
