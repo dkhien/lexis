@@ -1,5 +1,5 @@
-import { React, useEffect, useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { React, useState, useEffect } from 'react';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -18,11 +18,10 @@ import ReaderSidebar from '../components/ReaderSidebar';
 
 const drawerWidth = 300;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+const Main = styled('body', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
-    background: theme.palette.background.paper,
     height: '100vh',
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
@@ -134,7 +133,6 @@ function Pagination({ page, setPage, totalPages }) {
 }
 
 export default function Reader() {
-  const theme = useTheme();
   const [open, setOpen] = useState(true);
   const documents = useDocumentStore((state) => state.documents);
   const [selectedDoc, setSelectedDoc] = useState(documents[0] || null);
@@ -148,9 +146,7 @@ export default function Reader() {
       <AppBar
         position="fixed"
         open={open}
-        sx={{
-          backgroundColor: theme.palette.background.paper, boxShadow: 'none',
-        }}
+        sx={{ background: 'transparent', boxShadow: 'none' }}
       >
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box>
