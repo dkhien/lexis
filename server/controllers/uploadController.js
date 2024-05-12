@@ -31,24 +31,16 @@ async function generateHtml(ocrResults) {
         </style>
     </head>
     <body>
-    `;    html += `<h1>${filename}</h1>\n`;
-    const results = ocrResults[filename];
+    `;
+    let results = ocrResults[filename];
 
     if (Array.isArray(results)) {
-      html += '<ul>\n';
-      results.forEach((result, index) => {
+      results.forEach((result) => {
         result = result.replace(/\n/g, '<br>\n');
-        html += `<li><a href="#page-${index + 1}">Page ${index + 1}</a></li>\n`;
-      });
-      html += '\n</ul>\n';
-
-      results.forEach((result, index) => {
-        result = result.replace(/\n/g, '<br>\n');
-        html += `<h2 id="page-${index + 1}">Page ${index + 1}</h2>\n`;
         html += `<p>\n${result}\n</p>\n`;
       });
     } else {
-      result = result.replace(/\n/g, '<br>\n');
+      results = results.replace(/\n/g, '<br>\n');
       html += `\n<p>${results}</p>\n`;
     }
     html += '\n</body>\n</html>\n';

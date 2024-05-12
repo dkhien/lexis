@@ -5,7 +5,7 @@ const { Directory } = require('../utils/fileUtils');
 const winstonLogger = require('../utils/logger');
 
 function addStyleToHtml(fileName, style) {
-  const filePath = path.join(__dirname, '../', Directory.RESULTS, fileName);
+  const filePath = path.join(__dirname, '../', Directory.RESULTS, `${fileName}.html`);
 
   let html = fs.readFileSync(filePath, 'utf8');
   let styleTag = '';
@@ -41,9 +41,8 @@ function addStyleToHtml(fileName, style) {
 }
 
 async function convertHtmlToPdf(fileName) {
-  const normalizedFileName = fileName.replace('.html', '.pdf');
-  const htmlPath = path.join(__dirname, '../', Directory.RESULTS, fileName);
-  const pdfPath = path.join(__dirname, '../', Directory.RESULTS, normalizedFileName);
+  const htmlPath = path.join(__dirname, '../', Directory.RESULTS, `${fileName}.html`);
+  const pdfPath = path.join(__dirname, '../', Directory.RESULTS, `${fileName}.pdf`);
 
   try {
     const browser = await puppeteer.launch({ headless: true });
@@ -58,7 +57,9 @@ async function convertHtmlToPdf(fileName) {
       path: pdfPath,
       format: 'A4',
       printBackground: true,
-      // margin: { top: '100px', right: '50px', bottom: '100px', left: '50px' }
+      margin: {
+        top: '50px', right: '50px', bottom: '50px', left: '50px',
+      },
     });
 
     await browser.close();
