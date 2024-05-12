@@ -8,6 +8,7 @@ const router = express.Router();
 // Note: Include the input text in request.body.text
 router.post('/', async (req, res, next) => {
   try {
+    console.log(req.body);
     const { text } = req.body;
     if (!text || text.length === 0) {
       const error = new Error('No text provided');

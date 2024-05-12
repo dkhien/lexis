@@ -8,9 +8,12 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import DrawerHeader from '../components/ReaderSidebar/DrawerHeader';
 import useDocumentStore from '../store/documentStore';
 import ReaderSidebar from '../components/ReaderSidebar';
+import SummaryAccordion from '../components/SummaryAccordion/SummaryAccordion';
+import { State } from '../constants';
 
 const drawerWidth = 300;
 
@@ -56,10 +59,30 @@ export default function Reader() {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const documents = useDocumentStore((state) => state.documents);
+  const addSummaryToDocument = useDocumentStore((state) => state.addSummaryToDocument);
   const [selectedDoc, setSelectedDoc] = useState(documents[0] || null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
+  };
+  const handleSummarize = async () => {
+    try {
+      const summaryApi = `${process.env.REACT_APP_SERVER_URL}/api/summarize`;
+      const textToSummarize = { text: selectedDoc.content.join() };
+      setSelectedDoc((doc) => ({
+        ...doc,
+        state: State.SUMMARIZING,
+      }));
+      console.log(selectedDoc);
+      const response = await axios.post(summaryApi, textToSummarize);
+      console.log(response.data);
+      await addSummaryToDocument(selectedDoc.id, response.data);
+      setSelectedDoc(documents.find((doc) => doc.id === selectedDoc.id));
+      console.log(documents);
+      console.log(selectedDoc);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -84,7 +107,11 @@ export default function Reader() {
             </IconButton>
           </Box>
           <Box>
-            <Button color="primary" variant="outlined">Summarize</Button>
+            {selectedDoc && selectedDoc.state === State.SUMMARIZING ? (
+              <Button disabled variant="outlined">
+                Summarizing...
+              </Button>
+            ) : <Button color="primary" variant="outlined" onClick={handleSummarize}>Summarize</Button>}
             <Button color="primary" variant="outlined" sx={{ ml: 2 }}>Download</Button>
           </Box>
         </Toolbar>
@@ -108,11 +135,23 @@ function ReadingArea({ open, selectedDoc }) {
       <Box width="100%" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Box width="60%" align="justify">
           {/* TODO: Display the pages with proper pagination */}
-          {selectedDoc ? selectedDoc.content.map((page, index) => (
-            <Typography key={`${selectedDoc.id}page${index + 1}`} paragraph>
-              {page}
-            </Typography>
-          )) : <Typography>No document selected</Typography>}
+          {selectedDoc ? (
+            <>
+              {selectedDoc.summary && (
+                <SummaryAccordion summaryText={selectedDoc.summary} />
+
+              )}
+              {selectedDoc.content.map((page, index) => (
+                <Box>
+                  <Typography key={`${selectedDoc.id}page${index + 1}`} paragraph>
+                    {page}
+                  </Typography>
+                </Box>
+              ))}
+            </>
+          ) : (
+            <Typography>No document selected</Typography>
+          )}
         </Box>
       </Box>
     </Main>

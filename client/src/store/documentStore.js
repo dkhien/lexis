@@ -9,6 +9,17 @@ const useDocumentStore = create((set) => ({
     documents: state.documents.filter((doc) => doc.id !== documentId),
   })),
   removeAllDocuments: () => set({ documents: [] }),
+  addSummaryToDocument: (documentId, summary) => set((state) => ({
+    documents: state.documents.map((doc) => {
+      console.log('hello');
+      console.log(doc.id, documentId);
+      if (doc.id === documentId) {
+        console.log('gello if');
+        return { ...doc, summary };
+      }
+      return doc;
+    }),
+  })),
 }));
 
 export default useDocumentStore;

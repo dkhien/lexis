@@ -1,6 +1,7 @@
 const State = Object.freeze({
   READY: 'READY',
   PROCESSING: 'PROCESSING',
+  SUMMARIZING: 'SUMMARIZING',
   DONE: 'DONE',
   ERROR: 'ERROR',
 });
