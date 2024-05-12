@@ -15,10 +15,9 @@ import ReaderSidebar from '../components/ReaderSidebar';
 const drawerWidth = 300;
 
 const Main = styled('body', { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, bgcolor, open }) => ({
+  ({ theme, open }) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
-    background: bgcolor,
     height: '100vh',
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
@@ -57,22 +56,6 @@ export default function Reader() {
   const [open, setOpen] = useState(true);
   const documents = useDocumentStore((state) => state.documents);
   const [selectedDoc, setSelectedDoc] = useState(documents[0] || null);
-  const [bgColor, setBgColor] = useState(localStorage.getItem('newBackgroundColor') || theme.palette.background.paper);
-
-  useEffect(() => {
-    console.log('Background color changed to: ', bgColor);
-    const handleStorageChange = () => {
-      setBgColor(localStorage.getItem('newBackgroundColor'));
-      console.log('Background color changed to: ', bgColor);
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    // Cleanup function
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [localStorage.getItem('newBackgroundColor')]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -83,9 +66,7 @@ export default function Reader() {
       <AppBar
         position="fixed"
         open={open}
-        sx={{
-          backgroundColor: bgColor, boxShadow: 'none',
-        }}
+        sx={{ boxShadow: 'none' }}
       >
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box>
@@ -112,14 +93,14 @@ export default function Reader() {
         open={open}
         setOpen={setOpen}
       />
-      <ReadingArea open={open} selectedDoc={selectedDoc} bgColor={bgColor} />
+      <ReadingArea open={open} selectedDoc={selectedDoc} />
     </Box>
   );
 }
 
-function ReadingArea({ open, selectedDoc, bgColor }) {
+function ReadingArea({ open, selectedDoc }) {
   return (
-    <Main open={open} bgcolor={bgColor}>
+    <Main open={open}>
       <DrawerHeader />
       <Box width="100%" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Box width="60%" align="justify">
@@ -138,7 +119,6 @@ function ReadingArea({ open, selectedDoc, bgColor }) {
 ReadingArea.propTypes = {
   open: PropTypes.bool.isRequired,
   selectedDoc: PropTypes.instanceOf(Object),
-  bgColor: PropTypes.string.isRequired,
 };
 
 ReadingArea.defaultProps = {
