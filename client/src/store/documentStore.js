@@ -20,6 +20,14 @@ const useDocumentStore = create((set) => ({
       return doc;
     }),
   })),
+  addLanguageToDocument: (documentId, language) => set((state) => ({
+    documents: state.documents.map((doc) => {
+      if (doc.id === documentId) {
+        return { ...doc, language };
+      }
+      return doc;
+    }),
+  })),
 }));
 
 export default useDocumentStore;

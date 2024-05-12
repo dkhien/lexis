@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { State } from '../../constants';
 import useDocumentStore from '../../store/documentStore';
+import LanguageSelect from '../common/LanguageSelect';
 
 function ButtonStack({
   documentId, documentState, buttonSize = '2rem', handleDownload,
@@ -48,6 +49,10 @@ function ButtonStack({
       );
       break;
     case State.READY:
+      dynamicControls = (
+        <LanguageSelect documentId={document.id} />
+      );
+      break;
     default:
   }
 
