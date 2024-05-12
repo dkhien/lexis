@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Reader from './pages/Reader';
 import NotFound from './pages/NotFound';
 import MainLayout from './layout/MainLayout';
+import ScrambledGame from './pages/ScrambledGame';
 
 function App() {
   const routes = [
@@ -18,6 +19,11 @@ function App() {
       path: '/reader',
       element: <Reader />,
       wrapInMainLayout: false,
+    },
+    {
+      path: '/games/scrambled',
+      element: <ScrambledGame />,
+      wrapInMainLayout: true,
     },
     {
       path: '*',
