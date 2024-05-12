@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs } from 'firebase/firestore';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
@@ -16,7 +16,7 @@ import {
 import DrawerHeader from '../components/ReaderSidebar/DrawerHeader';
 import useDocumentStore from '../store/documentStore';
 import ReaderSidebar from '../components/ReaderSidebar';
-import { db } from '../firebase';
+import db from '../firebase';
 
 const drawerWidth = 300;
 
@@ -61,11 +61,11 @@ function Pagination({ page, setPage, totalPages }) {
   const [inputPage, setInputPage] = useState(parseInt(page, 10));
 
   useEffect(async () => {
-    const querySnapshot = await getDocs(collection(db, "books"));
+    const querySnapshot = await getDocs(collection(db, 'books'));
     querySnapshot.forEach((doc) => {
       console.log(`${doc.id} => Name: ${doc.data().name}, Author: ${doc.data().author}`);
     });
-  }, [])
+  }, []);
 
   useEffect(() => {
     setInputPage(parseInt(page, 10));
@@ -207,7 +207,11 @@ function ReadingArea({ open, selectedDoc }) {
             </Typography>
           ) : <Typography>No document selected</Typography>}
         </Box>
-        <Pagination page={pageNo} setPage={setPageNo} totalPages={selectedDoc?.content.length} />
+        {
+          selectedDoc && (
+            <Pagination page={pageNo} setPage={setPageNo} totalPages={selectedDoc.content.length} />
+          )
+        }
       </Box>
     </Main>
   );
