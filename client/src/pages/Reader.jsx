@@ -1,5 +1,5 @@
-import { React, useEffect, useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { React, useState } from 'react';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -52,7 +52,6 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function Reader() {
-  const theme = useTheme();
   const [open, setOpen] = useState(true);
   const documents = useDocumentStore((state) => state.documents);
   const [selectedDoc, setSelectedDoc] = useState(documents[0] || null);
@@ -66,7 +65,7 @@ export default function Reader() {
       <AppBar
         position="fixed"
         open={open}
-        sx={{ boxShadow: 'none' }}
+        sx={{ background: 'transparent', boxShadow: 'none' }}
       >
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box>
