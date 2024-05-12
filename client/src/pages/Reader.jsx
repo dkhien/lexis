@@ -196,7 +196,6 @@ function ReadingArea({ open, selectedDoc }) {
         }}
       >
         <Box width="60%" height="80vh" overflow="auto" align="justify">
-          {/* TODO: Display the pages with proper pagination */}
           {selectedDoc ? (
             <Typography paragraph>
               {selectedDoc.content[pageNo - 1]}
