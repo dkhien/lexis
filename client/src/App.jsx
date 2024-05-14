@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom';
 import Home from './pages/Home';
 import Reader from './pages/Reader';
+import Games from './pages/Games';
 import NotFound from './pages/NotFound';
 import MainLayout from './layout/MainLayout';
 
@@ -18,6 +19,11 @@ function App() {
       path: '/reader',
       element: <Reader />,
       wrapInMainLayout: false,
+    },
+    {
+      path: '/games',
+      element: <Games />,
+      wrapInMainLayout: true,
     },
     {
       path: '*',
