@@ -12,12 +12,18 @@ export default function LanguageSelect({ documentId }) {
   const addLanguageToDocument = useDocumentStore((state) => state.addLanguageToDocument);
   const documents = useDocumentStore((state) => state.documents);
 
-  const handleChange = (event) => {
-    console.log(event.target.value);
-    setLanguage(event.target.value);
-    addLanguageToDocument(documentId, language);
-    console.log(documents);
+  const handleChange = async (event) => {
+    const selectedLanguage = event.target.value;
+    setLanguage(selectedLanguage);
+    addLanguageToDocument(documentId, selectedLanguage);
   };
+
+  React.useEffect(() => {
+    const doc = documents.find((document) => document.id === documentId);
+    if (doc) {
+      setLanguage(doc.language);
+    }
+  }, [documentId, documents]);
 
   return (
     <div>

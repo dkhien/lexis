@@ -9,17 +9,15 @@ import { Box } from '@mui/material';
 
 export default function SummaryAccordion({ summaryText }) {
   return (
-    <Box sx={{ marginBottom: '1 rem' }}>
-      <Accordion>
+    <Box sx={{ marginBottom: '1rem' }}>
+      <Accordion variant="outlined">
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
         >
-          <Typography>Summary</Typography>
+          <Typography variant="h6">Summary</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
+          <Typography variant="body1">
             { summaryText }
           </Typography>
         </AccordionDetails>

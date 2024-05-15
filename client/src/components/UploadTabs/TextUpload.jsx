@@ -5,7 +5,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import useDocumentStore from '../../store/documentStore';
-import { LexisDocumentType, State } from '../../constants';
+import { Languages, LexisDocumentType, State } from '../../constants';
 
 function TextUpload({ closeModal }) {
   const documents = useDocumentStore((state) => state.documents);
@@ -29,6 +29,7 @@ function TextUpload({ closeModal }) {
       type: LexisDocumentType.TEXT,
       file: null,
       name: docName,
+      language: Languages.English,
       content: [content],
     });
     closeModal();

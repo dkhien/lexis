@@ -65,23 +65,24 @@ export default function Reader() {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+
   const handleSummarize = async () => {
     try {
       const summaryApi = `${process.env.REACT_APP_SERVER_URL}/api/summarize`;
       const textToSummarize = { text: selectedDoc.content.join() };
-      setSelectedDoc((doc) => ({
-        ...doc,
+      setSelectedDoc((prev) => ({
+        ...prev,
         state: State.SUMMARIZING,
       }));
-      console.log(selectedDoc);
       const response = await axios.post(summaryApi, textToSummarize);
-      console.log(response.data);
       await addSummaryToDocument(selectedDoc.id, response.data);
-      setSelectedDoc(documents.find((doc) => doc.id === selectedDoc.id));
-      console.log(documents);
-      console.log(selectedDoc);
+      setSelectedDoc((prev) => ({
+        ...prev,
+        summary: response.data,
+        state: State.DONE,
+      }));
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
