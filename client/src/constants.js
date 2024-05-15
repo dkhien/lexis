@@ -8,6 +8,7 @@ const State = Object.freeze({
 const LexisDocumentType = Object.freeze({
   TEXT: 'text',
   FILE: 'file',
+  BOOK: 'book',
 });
 
 const MimeType = Object.freeze({

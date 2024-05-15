@@ -16,7 +16,7 @@ function Home() {
             margin: '0 auto', marginTop: '5vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           }}
         >
-          <Box width="60%">
+          <Box width="100%">
             <UploadDialog />
           </Box>
         </Box>
