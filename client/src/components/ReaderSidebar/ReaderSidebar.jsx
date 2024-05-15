@@ -24,7 +24,7 @@ const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
   padding: theme.spacing(2),
   '&.Mui-selected, &.Mui-selected:hover': {
     color: '#fff',
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: `${theme.palette.secondary.main} !important`,
     '& .MuiListItemIcon-root': {
       color: '#fff',
     },
@@ -87,7 +87,7 @@ function ReaderSidebar({
               <CustomListItemButton
                 onClick={() => setSelectedDoc(doc)}
                 selected={selectedDoc && selectedDoc.id === doc.id}
-                sx={{ padding: '1rem' }}
+                sx={{ padding: '1rem', wordWrap: 'break-word' }}
               >
                 <ListItemIcon>
                   <FileTypeIcon
@@ -96,10 +96,9 @@ function ReaderSidebar({
                     }
                   />
                 </ListItemIcon>
+
                 <ListItemText
-                  disableTypography
                   primary={doc.name}
-                  overflow="hidden"
                   title={doc.type === MimeType.TEXT ? doc.content[0] : doc.name}
                 />
               </CustomListItemButton>

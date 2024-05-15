@@ -9,12 +9,19 @@ import convertSize from '../../utils/unitConverter';
 
 function DocumentListItem({ document }) {
   const fileSize = document.type === LexisDocumentType.FILE ? convertSize(document.file.size) : '';
-
+  const localStorageKeys = ['newTextColor', 'newLinkColor', 'newBackgroundColor', 'fontFamilyValue', 'headerFontSizeValue', 'textFontSizeValue'];
   const handleDownload = async () => {
     const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download/${document.resultFile}`;
+    const localStorageData = {};
+    localStorageKeys.forEach((key) => {
+      if (localStorage.getItem(key)) {
+        localStorageData[key] = localStorage.getItem(key);
+      }
+    });
     await axios({
       method: 'get',
       url: downloadAPI,
+      params: { style: localStorageData },
       responseType: 'blob',
     }).then((response) => {
       const url = window.URL.createObjectURL(

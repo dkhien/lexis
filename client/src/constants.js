@@ -1,6 +1,7 @@
 const State = Object.freeze({
   READY: 'READY',
   PROCESSING: 'PROCESSING',
+  SUMMARIZING: 'SUMMARIZING',
   DONE: 'DONE',
   ERROR: 'ERROR',
 });
@@ -17,4 +18,11 @@ const MimeType = Object.freeze({
   TEXT: 'text/plain',
 });
 
-export { State, LexisDocumentType, MimeType };
+const Languages = Object.freeze({
+  Vietnamese: 'vie',
+  English: 'eng',
+});
+
+export {
+  State, LexisDocumentType, MimeType, Languages,
+};

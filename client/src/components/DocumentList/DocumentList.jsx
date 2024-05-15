@@ -58,6 +58,14 @@ function DocumentList() {
       id: doc.id,
       name: doc.name,
       content: doc.content,
+      language: doc.language,
+    }))));
+
+    formData.append('file-docs', JSON.stringify(fileDocs.map((doc) => ({
+      id: doc.id,
+      name: doc.name,
+      content: doc.file,
+      language: doc.language,
     }))));
 
     const uploadApi = `${process.env.REACT_APP_SERVER_URL}/api/upload`;

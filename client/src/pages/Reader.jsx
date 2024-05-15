@@ -1,5 +1,8 @@
-import { React, useEffect, useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import {
+  React, useState, useEffect, Fragment,
+} from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { InputAdornment, TextField } from '@mui/material';
 import {
   NavigateNext, NavigateBefore, FirstPage, LastPage,
@@ -15,10 +19,13 @@ import {
 import DrawerHeader from '../components/ReaderSidebar/DrawerHeader';
 import useDocumentStore from '../store/documentStore';
 import ReaderSidebar from '../components/ReaderSidebar';
+import db from '../firebase';
+import SummaryAccordion from '../components/SummaryAccordion/SummaryAccordion';
+import { State } from '../constants';
 
 const drawerWidth = 300;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+const Main = styled('body', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -58,6 +65,13 @@ const AppBar = styled(MuiAppBar, {
 
 function Pagination({ page, setPage, totalPages }) {
   const [inputPage, setInputPage] = useState(parseInt(page, 10));
+
+  useEffect(async () => {
+    const querySnapshot = await getDocs(collection(db, 'books'));
+    querySnapshot.forEach((doc) => {
+      console.log(`${doc.id} => Name: ${doc.data().name}, Author: ${doc.data().author}`);
+    });
+  }, []);
 
   useEffect(() => {
     setInputPage(parseInt(page, 10));
@@ -134,13 +148,33 @@ function Pagination({ page, setPage, totalPages }) {
 }
 
 export default function Reader() {
-  const theme = useTheme();
   const [open, setOpen] = useState(true);
   const documents = useDocumentStore((state) => state.documents);
+  const addSummaryToDocument = useDocumentStore((state) => state.addSummaryToDocument);
   const [selectedDoc, setSelectedDoc] = useState(documents[0] || null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
+  };
+
+  const handleSummarize = async () => {
+    try {
+      const summaryApi = `${process.env.REACT_APP_SERVER_URL}/api/summarize`;
+      const textToSummarize = { text: selectedDoc.content.join() };
+      setSelectedDoc((prev) => ({
+        ...prev,
+        state: State.SUMMARIZING,
+      }));
+      const response = await axios.post(summaryApi, textToSummarize);
+      await addSummaryToDocument(selectedDoc.id, response.data);
+      setSelectedDoc((prev) => ({
+        ...prev,
+        summary: response.data,
+        state: State.DONE,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -148,9 +182,7 @@ export default function Reader() {
       <AppBar
         position="fixed"
         open={open}
-        sx={{
-          backgroundColor: theme.palette.background.paper, boxShadow: 'none',
-        }}
+        sx={{ background: 'transparent', boxShadow: 'none' }}
       >
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box>
@@ -165,7 +197,11 @@ export default function Reader() {
             </IconButton>
           </Box>
           <Box>
-            <Button color="primary" variant="outlined">Summarize</Button>
+            {selectedDoc && selectedDoc.state === State.SUMMARIZING ? (
+              <Button disabled variant="outlined">
+                Summarizing...
+              </Button>
+            ) : <Button color="primary" variant="outlined" onClick={handleSummarize}>Summarize</Button>}
             <Button color="primary" variant="outlined" sx={{ ml: 2 }}>Download</Button>
           </Box>
         </Toolbar>
@@ -195,14 +231,29 @@ function ReadingArea({ open, selectedDoc }) {
           alignItems: 'center',
         }}
       >
+
+        {selectedDoc && selectedDoc.summary && (
+          <Box width="60%" overflow="auto" align="justify">
+            <SummaryAccordion summaryText={selectedDoc.summary} />
+          </Box>
+        )}
         <Box width="60%" height="80vh" overflow="auto" align="justify">
           {selectedDoc ? (
             <Typography paragraph>
-              {selectedDoc.content[pageNo - 1]}
+              {selectedDoc.content[pageNo - 1].split('\n').map((line, index) => (
+                <Fragment key={`${selectedDoc.name}-${pageNo}-${index + 1}`}>
+                  {line}
+                  <br />
+                </Fragment>
+              ))}
             </Typography>
           ) : <Typography>No document selected</Typography>}
         </Box>
-        <Pagination page={pageNo} setPage={setPageNo} totalPages={selectedDoc.content.length} />
+        {
+          selectedDoc && (
+            <Pagination page={pageNo} setPage={setPageNo} totalPages={selectedDoc.content.length} />
+          )
+        }
       </Box>
     </Main>
   );

@@ -7,7 +7,7 @@ import {
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
-import { State, LexisDocumentType } from '../../constants';
+import { State, LexisDocumentType, Languages } from '../../constants';
 import useDocumentStore from '../../store/documentStore';
 import { isImageFile, isPDFFile } from '../../utils/fileUtils';
 
@@ -64,6 +64,7 @@ function FileUploadDropzone({ closeModal }) {
           name: file.name,
           state: State.READY,
           type: LexisDocumentType.FILE,
+          language: Languages.English,
           content: [], // content will be populated after OCR
           file,
         }));

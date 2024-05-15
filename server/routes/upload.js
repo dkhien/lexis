@@ -9,13 +9,14 @@ router.post('/', upload.array('files'), async (req, res, next) => {
   try {
     const { files } = req;
     const textDocs = JSON.parse(req.body['text-docs']);
+    const fileDocs = JSON.parse(req.body['file-docs']);
 
     if ((!files || files.length === 0) && (!textDocs || textDocs.length === 0)) {
       const error = new Error('Empty documents. Please upload at least one file or enter some text.');
       error.httpStatusCode = 400;
       throw error;
     }
-    const fileResults = await processFiles(files);
+    const fileResults = await processFiles(files, fileDocs);
     const textResults = await processTexts(textDocs);
 
     res.send({
