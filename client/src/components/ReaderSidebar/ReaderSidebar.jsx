@@ -24,7 +24,7 @@ const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
   padding: theme.spacing(2),
   '&.Mui-selected, &.Mui-selected:hover': {
     color: '#fff',
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: `${theme.palette.secondary.main} !important`,
     '& .MuiListItemIcon-root': {
       color: '#fff',
     },
@@ -96,8 +96,8 @@ function ReaderSidebar({
                     }
                   />
                 </ListItemIcon>
+
                 <ListItemText
-                  disableTypography
                   primary={doc.name}
                   overflow="hidden"
                   title={doc.type === MimeType.TEXT ? doc.content[0] : doc.name}

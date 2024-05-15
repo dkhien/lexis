@@ -15,26 +15,35 @@ async function generateHtml(ocrResults) {
   const htmlPaths = {};
 
   Object.keys(ocrResults).forEach(async (filename) => {
-    let html = '<html><body>';
-    html += `<h1>${filename}</h1>`;
-    const results = ocrResults[filename];
+    let html = `
+    <html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Lexend+Mega:wght@100..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Lexend+Mega:wght@100..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Lexend+Mega:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Lexend+Mega:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Lexend+Mega:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Lexend+Mega:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+        <style>
+        </style>
+    </head>
+    <body>
+    `;
+    let results = ocrResults[filename];
 
     if (Array.isArray(results)) {
-      html += '<ul>';
-      results.forEach((result, index) => {
-        html += `<li><a href="#page-${index + 1}">Page ${index + 1}</a></li>`;
-      });
-      html += '</ul>';
-
-      results.forEach((result, index) => {
-        html += `<h2 id="page-${index + 1}">Page ${index + 1}</h2>`;
-        html += `<p>${result}</p>`;
+      results.forEach((result) => {
+        result = result.replace(/\n/g, '<br>\n');
+        html += `<p>\n${result}\n</p>\n`;
       });
     } else {
-      html += `<p>${results}</p>`;
+      results = results.replace(/\n/g, '<br>\n');
+      html += `\n<p>${results}</p>\n`;
     }
-
-    html += '</body></html>';
+    html += '\n</body>\n</html>\n';
 
     const filePath = path.join(__dirname, '../', Directory.RESULTS, `${filename}.html`);
     writeContentToFile(filePath, html);
