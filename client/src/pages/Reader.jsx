@@ -1,4 +1,6 @@
-import { React, useState, useEffect } from 'react';
+import {
+  React, useState, useEffect, Fragment,
+} from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -229,10 +231,21 @@ function ReadingArea({ open, selectedDoc }) {
           alignItems: 'center',
         }}
       >
+
+        {selectedDoc && selectedDoc.summary && (
+          <Box width="60%" overflow="auto" align="justify">
+            <SummaryAccordion summaryText={selectedDoc.summary} />
+          </Box>
+        )}
         <Box width="60%" height="80vh" overflow="auto" align="justify">
           {selectedDoc ? (
             <Typography paragraph>
-              {selectedDoc.content[pageNo - 1]}
+              {selectedDoc.content[pageNo - 1].split('\n').map((line, index) => (
+                <Fragment key={`${selectedDoc.name}-${pageNo}-${index + 1}`}>
+                  {line}
+                  <br />
+                </Fragment>
+              ))}
             </Typography>
           ) : <Typography>No document selected</Typography>}
         </Box>

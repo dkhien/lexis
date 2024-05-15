@@ -36,8 +36,8 @@ async function generateHtml(ocrResults) {
 
     if (Array.isArray(results)) {
       results.forEach((result) => {
-        result = result.replace(/\n/g, '<br>\n');
-        html += `<p>\n${result}\n</p>\n`;
+        const newResult = result.replace(/\n/g, '<br>\n');
+        html += `<p>\n${newResult}\n</p>\n`;
       });
     } else {
       results = results.replace(/\n/g, '<br>\n');
@@ -97,7 +97,6 @@ async function ocr(files, fileDocs) {
     file,
     language: fileDocs[index].language,
   }));
-  console.log(filesWithInfo);
   const ocrResults = {};
 
   // OCR for images
@@ -112,8 +111,7 @@ async function ocr(files, fileDocs) {
 
   // OCR for PDFs
   const pdfFiles = filesWithInfo.filter((file) => file.file.mimetype === MimeType.PDF);
-  console.log(pdfFiles);
-  await Promise.all(pdfFiles.map(async (file) => {
+  const pdfResults = await Promise.all(pdfFiles.map(async (file) => {
     // Convert PDF to images and OCR each image
     winstonLogger.info(`Converting PDF to image: ${file.file.filename}`);
     let imagePaths = await convertPdf(file.file.path);
@@ -121,9 +119,13 @@ async function ocr(files, fileDocs) {
       file: image,
       language: file.language,
     }));
-    const pdfResults = await imagesToText(imagePaths);
-    ocrResults[file.file.filename] = pdfResults;
+    const results = await imagesToText(imagePaths);
+    return { filename: file.file.filename, results };
   }));
+
+  pdfResults.forEach(({ filename, results }) => {
+    ocrResults[filename] = results;
+  });
 
   return ocrResults;
 }
