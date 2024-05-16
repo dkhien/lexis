@@ -225,7 +225,6 @@ function ReadingArea({ open, selectedDoc }) {
 
   useEffect(() => {
     document.documentElement.lang = selectedDoc ? selectedDoc.language.substring(0, 2) : 'en';
-    console.log(selectedDoc.content);
   }, [selectedDoc]);
 
   return (
