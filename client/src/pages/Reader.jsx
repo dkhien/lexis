@@ -22,6 +22,7 @@ import ReaderSidebar from '../components/ReaderSidebar';
 import db from '../firebase';
 import SummaryAccordion from '../components/SummaryAccordion/SummaryAccordion';
 import { State } from '../constants';
+import handleDownloadUtil from '../utils/downloadUtils';
 
 const drawerWidth = 300;
 
@@ -178,6 +179,10 @@ export default function Reader() {
     }
   };
 
+  const handleDownload = async () => {
+    await handleDownloadUtil(selectedDoc);
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar
@@ -203,7 +208,7 @@ export default function Reader() {
                 Summarizing...
               </Button>
             ) : <Button color="primary" variant="outlined" onClick={handleSummarize}>Summarize</Button>}
-            <Button color="primary" variant="outlined" sx={{ ml: 2 }}>Download</Button>
+            <Button color="primary" variant="outlined" onClick={handleDownload} sx={{ ml: 2 }}>Download</Button>
           </Box>
         </Toolbar>
       </AppBar>
