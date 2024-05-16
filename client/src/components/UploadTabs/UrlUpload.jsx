@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import useDocumentStore from '../../store/documentStore';
 import { Languages, LexisDocumentType, State } from '../../constants';
 
-function TextUpload({ closeModal }) {
+function UrlUpload({ closeModal }) {
   const documents = useDocumentStore((state) => state.documents);
   const addDocument = useDocumentStore((state) => state.addDocument);
   const [title, setTitle] = useState('');
@@ -20,13 +20,13 @@ function TextUpload({ closeModal }) {
       return;
     }
 
-    const existingTextDocs = documents.filter((doc) => doc.type === LexisDocumentType.TEXT && doc.name.startsWith('Text'));
-    const index = existingTextDocs.length + 1;
-    const docName = title || `Text ${index}`;
+    const existingWebpageDocs = documents.filter((doc) => doc.type === LexisDocumentType.WEBPAGE && doc.name.startsWith('Webpage'));
+    const index = existingWebpageDocs.length + 1;
+    const docName = title || `Webpage ${index}`;
     addDocument({
       id: uuidv4(),
       state: State.READY,
-      type: LexisDocumentType.TEXT,
+      type: LexisDocumentType.WEBPAGE,
       file: null,
       name: docName,
       language: Languages.English,
@@ -49,20 +49,18 @@ function TextUpload({ closeModal }) {
         onChange={(e) => setTitle(e.target.value)}
       />
       <TextField
-        label="Content"
+        label="URL"
         variant="filled"
         fullWidth
-        margin="normal"
-        multiline
-        rows={11}
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        sx={{ marginTop: '1rem' }}
       />
       <Button
         variant="contained"
         size="large"
         color="primary"
-        style={{ alignSelf: 'flex-end', marginTop: '10px' }}
+        style={{ alignSelf: 'flex-end', marginTop: '1rem' }}
         onClick={handleUpload}
       >
         Upload
@@ -71,18 +69,18 @@ function TextUpload({ closeModal }) {
         open={showToast}
         autoHideDuration={3000}
         onClose={handleCloseToast}
-        message="Content cannot be empty"
+        message="URL cannot be empty"
       />
     </Box>
   );
 }
 
-TextUpload.propTypes = {
+UrlUpload.propTypes = {
   closeModal: PropTypes.func,
 };
 
-TextUpload.defaultProps = {
+UrlUpload.defaultProps = {
   closeModal: () => {},
 };
 
-export default TextUpload;
+export default UrlUpload;

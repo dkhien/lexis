@@ -1,6 +1,7 @@
 const State = Object.freeze({
   READY: 'READY',
   PROCESSING: 'PROCESSING',
+  SUMMARIZING: 'SUMMARIZING',
   DONE: 'DONE',
   ERROR: 'ERROR',
 });
@@ -9,6 +10,7 @@ const LexisDocumentType = Object.freeze({
   TEXT: 'text',
   FILE: 'file',
   BOOK: 'book',
+  WEBPAGE: 'webpage',
 });
 
 const MimeType = Object.freeze({
@@ -18,4 +20,11 @@ const MimeType = Object.freeze({
   TEXT: 'text/plain',
 });
 
-export { State, LexisDocumentType, MimeType };
+const Languages = Object.freeze({
+  Vietnamese: 'vie',
+  English: 'eng',
+});
+
+export {
+  State, LexisDocumentType, MimeType, Languages,
+};

@@ -87,7 +87,7 @@ function ReaderSidebar({
               <CustomListItemButton
                 onClick={() => setSelectedDoc(doc)}
                 selected={selectedDoc && selectedDoc.id === doc.id}
-                sx={{ padding: '1rem' }}
+                sx={{ padding: '1rem', wordWrap: 'break-word' }}
               >
                 <ListItemIcon>
                   <FileTypeIcon
@@ -99,7 +99,6 @@ function ReaderSidebar({
 
                 <ListItemText
                   primary={doc.name}
-                  overflow="hidden"
                   title={doc.type === MimeType.TEXT ? doc.content[0] : doc.name}
                 />
               </CustomListItemButton>

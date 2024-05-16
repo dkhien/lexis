@@ -2,6 +2,8 @@ const path = require('path');
 const { imagesToText } = require('../services/tesseract');
 const { convertPdf } = require('../services/poppler');
 const winstonLogger = require('../utils/logger');
+const { readWebsite } = require('../services/noderead');
+
 const {
   writeContentToFile, normalizeFileName, Directory, MimeType,
 } = require('../utils/fileUtils');
@@ -36,8 +38,8 @@ async function generateHtml(ocrResults) {
 
     if (Array.isArray(results)) {
       results.forEach((result) => {
-        result = result.replace(/\n/g, '<br>\n');
-        html += `<p>\n${result}\n</p>\n`;
+        const newResult = result.replace(/\n/g, '<br>\n');
+        html += `<p>\n${newResult}\n</p>\n`;
       });
     } else {
       results = results.replace(/\n/g, '<br>\n');
@@ -92,32 +94,47 @@ async function generateJson(ocrResults) {
  * @param {Array} files The files to perform OCR on.
  * @returns {Object} An object containing the OCR results for each file.
  */
-async function ocr(files) {
+async function ocr(files, fileDocs) {
+  const filesWithInfo = files.map((file, index) => ({
+    file,
+    language: fileDocs[index].language,
+  }));
   const ocrResults = {};
 
   // OCR for images
-  const imageFiles = files.filter((file) => file.mimetype !== MimeType.PDF);
-  const imageResults = await imagesToText(imageFiles.map((file) => file.path));
+  const imageFiles = filesWithInfo.filter((file) => file.file.mimetype !== MimeType.PDF);
+  const imageResults = await imagesToText(imageFiles.map((image) => ({
+    ...image,
+    file: image.file.path,
+  })));
   imageResults.forEach((result, index) => {
-    ocrResults[imageFiles[index].filename] = result;
+    ocrResults[imageFiles[index].file.filename] = result;
   });
 
   // OCR for PDFs
-  const pdfFiles = files.filter((file) => file.mimetype === MimeType.PDF);
-  await Promise.all(pdfFiles.map(async (file) => {
+  const pdfFiles = filesWithInfo.filter((file) => file.file.mimetype === MimeType.PDF);
+  const pdfResults = await Promise.all(pdfFiles.map(async (file) => {
     // Convert PDF to images and OCR each image
-    winstonLogger.info(`Converting PDF to image: ${file.filename}`);
-    const imagePaths = await convertPdf(file.path);
-    const pdfResults = await imagesToText(imagePaths);
-    ocrResults[file.filename] = pdfResults;
+    winstonLogger.info(`Converting PDF to image: ${file.file.filename}`);
+    let imagePaths = await convertPdf(file.file.path);
+    imagePaths = imagePaths.map((image) => ({
+      file: image,
+      language: file.language,
+    }));
+    const results = await imagesToText(imagePaths);
+    return { filename: file.file.filename, results };
   }));
+
+  pdfResults.forEach(({ filename, results }) => {
+    ocrResults[filename] = results;
+  });
 
   return ocrResults;
 }
 
-async function processFiles(files) {
+async function processFiles(files, fileDocs) {
   // STEP 1: OCR
-  const ocrResults = await ocr(files);
+  const ocrResults = await ocr(files, fileDocs);
 
   // STEP 2: Generate HTML and JSON files
   const htmlResults = await generateHtml(ocrResults);
@@ -147,4 +164,29 @@ async function processTexts(textDocs) {
   return results;
 }
 
-module.exports = { processFiles, processTexts };
+async function processWebpages(webpageDocs) {
+  const webpageContents = {};
+  try {
+    await Promise.all(webpageDocs.map(async (doc) => {
+      const resultFileName = `${normalizeFileName(doc.name)}-${doc.id}`;
+      let webpageContent = await readWebsite(doc.content[0]);
+      webpageContent = `<h3>${webpageContent.title}</h3>${webpageContent.content}`;
+      webpageContents[resultFileName] = webpageContent;
+    }));
+  } catch (error) {
+    winstonLogger.error('Error processing webpage: ', error);
+  }
+
+  const htmlResults = await generateHtml(webpageContents);
+  await generateJson(webpageContents);
+
+  const results = Object.keys(htmlResults).map((filename) => ({
+    resultFile: `${filename}`,
+    content: Array.isArray(webpageContents[filename])
+      ? webpageContents[filename] : [webpageContents[filename]],
+  }));
+
+  return results;
+}
+
+module.exports = { processFiles, processTexts, processWebpages };

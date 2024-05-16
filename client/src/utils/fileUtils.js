@@ -6,10 +6,10 @@ const isPDFFile = (fileType) => fileType === MimeType.PDF;
 
 const isTextFile = (fileType) => fileType === MimeType.TEXT;
 
-const isTextDocument = (type) => type === LexisDocumentType.TEXT;
+const isTextDoc = (type) => type === LexisDocumentType.TEXT;
 
-const isBookFile = (fileType) => fileType === LexisDocumentType.BOOK;
+const isWebpageDoc = (type) => type === LexisDocumentType.WEBPAGE;
 
 export {
-  isImageFile, isPDFFile, isTextFile, isBookFile, isTextDocument,
+  isImageFile, isPDFFile, isTextFile, isWebpageDoc, isTextDoc,
 };

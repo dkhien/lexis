@@ -1,4 +1,6 @@
-import { React, useState, useEffect } from 'react';
+import {
+  React, useState, useEffect, Fragment,
+} from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -9,14 +11,18 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { InputAdornment, TextField } from '@mui/material';
 import {
   NavigateNext, NavigateBefore, FirstPage, LastPage,
 } from '@mui/icons-material';
+import parse from 'html-react-parser';
 import DrawerHeader from '../components/ReaderSidebar/DrawerHeader';
 import useDocumentStore from '../store/documentStore';
 import ReaderSidebar from '../components/ReaderSidebar';
 import db from '../firebase';
+import SummaryAccordion from '../components/SummaryAccordion/SummaryAccordion';
+import { LexisDocumentType, State } from '../constants';
 
 const drawerWidth = 300;
 
@@ -24,6 +30,7 @@ const Main = styled('body', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
+    background: theme.palette.background.paper,
     height: '100vh',
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
@@ -144,10 +151,32 @@ function Pagination({ page, setPage, totalPages }) {
 export default function Reader() {
   const [open, setOpen] = useState(true);
   const documents = useDocumentStore((state) => state.documents);
+  const addSummaryToDocument = useDocumentStore((state) => state.addSummaryToDocument);
   const [selectedDoc, setSelectedDoc] = useState(documents[0] || null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
+  };
+
+  const handleSummarize = async () => {
+    try {
+      // TODO: Summarize by page or by document?
+      const summaryApi = `${process.env.REACT_APP_SERVER_URL}/api/summarize`;
+      const textToSummarize = { text: selectedDoc.content.join() };
+      setSelectedDoc((prev) => ({
+        ...prev,
+        state: State.SUMMARIZING,
+      }));
+      const response = await axios.post(summaryApi, textToSummarize);
+      await addSummaryToDocument(selectedDoc.id, response.data);
+      setSelectedDoc((prev) => ({
+        ...prev,
+        summary: response.data,
+        state: State.DONE,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -170,7 +199,11 @@ export default function Reader() {
             </IconButton>
           </Box>
           <Box>
-            <Button color="primary" variant="outlined">Summarize</Button>
+            {selectedDoc && selectedDoc.state === State.SUMMARIZING ? (
+              <Button disabled variant="outlined">
+                Summarizing...
+              </Button>
+            ) : <Button color="primary" variant="outlined" onClick={handleSummarize}>Summarize</Button>}
             <Button color="primary" variant="outlined" sx={{ ml: 2 }}>Download</Button>
           </Box>
         </Toolbar>
@@ -189,6 +222,11 @@ export default function Reader() {
 
 function ReadingArea({ open, selectedDoc }) {
   const [pageNo, setPageNo] = useState(1);
+
+  useEffect(() => {
+    document.documentElement.lang = selectedDoc ? selectedDoc.language.substring(0, 2) : 'en';
+  }, [selectedDoc]);
+
   return (
     <Main open={open}>
       <DrawerHeader />
@@ -200,10 +238,21 @@ function ReadingArea({ open, selectedDoc }) {
           alignItems: 'center',
         }}
       >
+
         <Box width="60%" height="80vh" overflow="auto" align="justify">
+          {selectedDoc && selectedDoc.summary && (
+            <SummaryAccordion summaryText={selectedDoc.summary} />
+          )}
           {selectedDoc ? (
             <Typography paragraph>
-              {selectedDoc.content[pageNo - 1]}
+              {selectedDoc.type === LexisDocumentType.WEBPAGE
+                ? parse(selectedDoc.content[pageNo - 1])
+                : selectedDoc.content[pageNo - 1].split('\n').map((line, index) => (
+                  <Fragment key={`${selectedDoc.name}-${pageNo}-${index + 1}`}>
+                    {line}
+                    <br />
+                  </Fragment>
+                ))}
             </Typography>
           ) : <Typography>No document selected</Typography>}
         </Box>

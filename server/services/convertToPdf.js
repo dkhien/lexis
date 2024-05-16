@@ -5,6 +5,10 @@ const { Directory } = require('../utils/fileUtils');
 const winstonLogger = require('../utils/logger');
 
 function addStyleToHtml(fileName, style) {
+  if (style === undefined || style === null || Object.keys(style).length === 0) {
+    return;
+  }
+
   const filePath = path.join(__dirname, '../', Directory.RESULTS, `${fileName}.html`);
 
   let html = fs.readFileSync(filePath, 'utf8');
@@ -26,6 +30,8 @@ function addStyleToHtml(fileName, style) {
     }
     if (style.newBackgroundColor) {
       styleTag += `background-color: ${style.newBackgroundColor};\n`;
+    } else {
+      styleTag += 'background-color: #fbfbc8;\n';
     }
     if (style.fontFamilyValue) {
       styleTag += `font-family: ${style.fontFamilyValue};\n`;
