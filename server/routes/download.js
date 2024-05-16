@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const { createZipFile } = require('../controllers/downloadController');
 const convertToPdf = require('../services/convertToPdf');
 
 const router = express.Router();
@@ -11,9 +10,8 @@ router.get('/:resultFile', async (req, res, next) => {
     const { style } = req.query;
     const fileName = req.params.resultFile;
     await convertToPdf.addStyleAndConvertToPdf(fileName, style);
-    const files = [`${fileName}.pdf`, `${fileName}.json`];
-    const zipFile = await createZipFile(files);
-    res.sendFile(path.join(__dirname, `../results/${zipFile}`));
+    const pdfFilePath = `${fileName}.pdf`;
+    res.sendFile(path.join(__dirname, `../results/${pdfFilePath}`));
   } catch (error) {
     next(error);
   }

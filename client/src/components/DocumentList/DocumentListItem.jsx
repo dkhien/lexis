@@ -1,49 +1,16 @@
 import React from 'react';
 import { Box, Divider } from '@mui/material';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import ButtonStack from './ButtonStack';
 import DocumentInfo from './DocumentInfo';
 import { LexisDocumentType, MimeType } from '../../constants';
 import convertSize from '../../utils/unitConverter';
+import handleDownloadUtil from '../../utils/downloadUtils';
 
 function DocumentListItem({ document }) {
   const fileSize = document.type === LexisDocumentType.FILE ? convertSize(document.file.size) : '';
-  const localStorageKeys = ['newTextColor', 'newLinkColor', 'newBackgroundColor', 'fontFamilyValue', 'headerFontSizeValue', 'textFontSizeValue'];
   const handleDownload = async () => {
-    const downloadAPI = `${process.env.REACT_APP_SERVER_URL}/api/download/${document.resultFile}`;
-    const localStorageData = {};
-    localStorageKeys.forEach((key) => {
-      if (localStorage.getItem(key)) {
-        localStorageData[key] = localStorage.getItem(key);
-      }
-    });
-    await axios({
-      method: 'get',
-      url: downloadAPI,
-      params: { style: localStorageData },
-      responseType: 'blob',
-    }).then((response) => {
-      const url = window.URL.createObjectURL(
-        new Blob([response.data]),
-        { type: MimeType.ZIP },
-      );
-      const link = window.document.createElement('a');
-      link.href = url;
-      const filename = `${document.resultFile}.zip`;
-      link.setAttribute(
-        'download',
-        filename,
-      );
-      // Append to html link element page
-      window.document.body.appendChild(link);
-
-      // Start download
-      link.click();
-
-      // Clean up and remove the link
-      URL.revokeObjectURL(url);
-    });
+    await handleDownloadUtil(document);
   };
 
   return (
