@@ -25,8 +25,8 @@ function ButtonStack({
       );
       break;
 
-    case State.DONE && documentType !== LexisDocumentType.BOOK:
-      dynamicControls = (
+    case State.DONE:
+      dynamicControls = documentType !== LexisDocumentType.BOOK ? (
         <Stack
           spacing={2}
           direction="row"
@@ -46,7 +46,7 @@ function ButtonStack({
             <FileDownloadOutlined sx={{ fontSize: buttonSize }} />
           </Button>
         </Stack>
-      );
+      ) : undefined;
       break;
     case State.READY:
       dynamicControls = (
