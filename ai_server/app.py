@@ -45,9 +45,9 @@ def get_best_books(scores):
     print(sorted_scores)
     return json.dumps(sorted_scores[:5])
 
-book_dict = get_data_from_db("lexis-18c6c-firebase-adminsdk-ui60s-64c548d4c8.json")
+book_dict = get_data_from_db("lexis-18c6c-firebase-adminsdk-ui60s-81543d1cea.json")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3005)
 
-get_data_from_db("lexis-18c6c-firebase-adminsdk-ui60s-64c548d4c8.json")
+get_data_from_db("lexis-18c6c-firebase-adminsdk-ui60s-81543d1cea.json")

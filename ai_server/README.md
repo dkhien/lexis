@@ -1,9 +1,15 @@
 ## First-time set-up
 ### 1. Package installation
-
+For Linux/MacOS
 ```sh
 cd ai_server
 pip install -r requirements.txt
+```
+
+For Windows
+```sh
+cd ai_server
+pip install -r requirements_windows.txt
 ```
 
 ### 2. Get Firebase authentication key

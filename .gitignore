@@ -40,5 +40,8 @@ server/results
 # .env files
 **/.env
 
+ai_server/cc.en.*
+ai_server/lexis-18c6c-firebase-adminsdk-ui60s*
+ai_server/__pycache__*
 
 node_modules
