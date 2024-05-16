@@ -3,7 +3,7 @@ import { Box, Divider } from '@mui/material';
 import PropTypes from 'prop-types';
 import ButtonStack from './ButtonStack';
 import DocumentInfo from './DocumentInfo';
-import { LexisDocumentType, MimeType } from '../../constants';
+import { LexisDocumentType } from '../../constants';
 import convertSize from '../../utils/unitConverter';
 import handleDownloadUtil from '../../utils/downloadUtils';
 
