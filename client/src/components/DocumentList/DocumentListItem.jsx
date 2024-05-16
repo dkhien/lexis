@@ -57,7 +57,7 @@ function DocumentListItem({ document }) {
       >
         <DocumentInfo
           name={document.name}
-          type={document.type === LexisDocumentType.FILE ? document.file.type : MimeType.TEXT}
+          type={document.type === LexisDocumentType.FILE ? document.file.type : document.type}
           content={document.content}
           size={fileSize}
         />

@@ -1,5 +1,5 @@
 import {
-  React, useState, useEffect, Fragment,
+  React, useState, useEffect,
 } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { styled } from '@mui/material/styles';
@@ -16,6 +16,7 @@ import { InputAdornment, TextField } from '@mui/material';
 import {
   NavigateNext, NavigateBefore, FirstPage, LastPage,
 } from '@mui/icons-material';
+import parse from 'html-react-parser';
 import DrawerHeader from '../components/ReaderSidebar/DrawerHeader';
 import useDocumentStore from '../store/documentStore';
 import ReaderSidebar from '../components/ReaderSidebar';
@@ -244,12 +245,7 @@ function ReadingArea({ open, selectedDoc }) {
           )}
           {selectedDoc ? (
             <Typography paragraph>
-              {selectedDoc.content[pageNo - 1].split('\n').map((line, index) => (
-                <Fragment key={`${selectedDoc.name}-${pageNo}-${index + 1}`}>
-                  {line}
-                  <br />
-                </Fragment>
-              ))}
+              {parse(selectedDoc.content[pageNo - 1])}
             </Typography>
           ) : <Typography>No document selected</Typography>}
         </Box>

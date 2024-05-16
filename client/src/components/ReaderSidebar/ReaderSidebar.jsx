@@ -92,7 +92,7 @@ function ReaderSidebar({
                 <ListItemIcon>
                   <FileTypeIcon
                     fileType={
-                      doc.type === LexisDocumentType.FILE ? doc.file.type : MimeType.TEXT
+                      doc.type === LexisDocumentType.FILE ? doc.file.type : doc.type
                     }
                   />
                 </ListItemIcon>
