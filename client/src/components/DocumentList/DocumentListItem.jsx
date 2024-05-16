@@ -66,6 +66,7 @@ function DocumentListItem({ document }) {
             documentId={document.id}
             documentState={document.state}
             handleDownload={handleDownload}
+            documentType={document.type}
           />
         </Box>
       </Box>

@@ -7,12 +7,12 @@ import {
 import {
   Button, IconButton, CircularProgress, Stack, Box,
 } from '@mui/material';
-import { State } from '../../constants';
+import { LexisDocumentType, State } from '../../constants';
 import useDocumentStore from '../../store/documentStore';
 import LanguageSelect from '../common/LanguageSelect';
 
 function ButtonStack({
-  documentId, documentState, buttonSize = '2rem', handleDownload,
+  documentId, documentState, buttonSize = '2rem', handleDownload, documentType,
 }) {
   const removeDocument = useDocumentStore((state) => state.removeDocument);
   let dynamicControls;
@@ -25,7 +25,7 @@ function ButtonStack({
       );
       break;
 
-    case State.DONE:
+    case State.DONE && documentType !== LexisDocumentType.BOOK:
       dynamicControls = (
         <Stack
           spacing={2}
@@ -76,6 +76,7 @@ ButtonStack.propTypes = {
   documentState: PropTypes.string.isRequired,
   buttonSize: PropTypes.string,
   handleDownload: PropTypes.func.isRequired,
+  documentType: PropTypes.string.isRequired,
 };
 
 ButtonStack.defaultProps = {

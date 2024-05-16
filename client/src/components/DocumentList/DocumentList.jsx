@@ -121,7 +121,7 @@ function DocumentList() {
   };
 
   return (
-    <Card sx={{ padding: '2rem', marginX: '5vw' }}>
+    <Card sx={{ padding: '2rem', borderRadius: '1rem' }} variant="outlined">
       <Box sx={{ height: '550px', overflowY: 'auto' }}>
         {documents.map((doc) => (
           <DocumentListItem key={doc.id} document={doc} />

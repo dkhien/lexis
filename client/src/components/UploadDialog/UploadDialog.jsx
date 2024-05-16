@@ -7,9 +7,11 @@ import UploadTabs from '../UploadTabs/UploadTabs';
  */
 export default function UploadDialog({ sx }) {
   return (
-    <Card sx={{
-      width: '100%', height: '650px', padding: '1rem', ...sx,
-    }}
+    <Card
+      sx={{
+        width: '100%', height: '650px', padding: '2rem', borderRadius: '1rem', ...sx,
+      }}
+      variant="outlined"
     >
       <Typography variant="h6" align="left" gutterBottom>
         Add a document

@@ -87,7 +87,7 @@ function FileUploadDropzone({ closeModal }) {
 
   return (
     <>
-      <Card sx={{ maxWidth: 900, margin: '0 auto', boxShadow: 'none' }}>
+      <Card sx={{ margin: '0 auto', boxShadow: 'none' }}>
         <CardContent>
           <Box {...getRootProps({ style })}>
             <input {...getInputProps()} />
