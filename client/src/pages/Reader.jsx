@@ -1,5 +1,5 @@
 import {
-  React, useState, useEffect,
+  React, useState, useEffect, Fragment,
 } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { styled } from '@mui/material/styles';
@@ -22,7 +22,7 @@ import useDocumentStore from '../store/documentStore';
 import ReaderSidebar from '../components/ReaderSidebar';
 import db from '../firebase';
 import SummaryAccordion from '../components/SummaryAccordion/SummaryAccordion';
-import { State } from '../constants';
+import { LexisDocumentType, State } from '../constants';
 
 const drawerWidth = 300;
 
@@ -225,6 +225,7 @@ function ReadingArea({ open, selectedDoc }) {
 
   useEffect(() => {
     document.documentElement.lang = selectedDoc ? selectedDoc.language.substring(0, 2) : 'en';
+    console.log(selectedDoc.content);
   }, [selectedDoc]);
 
   return (
@@ -245,7 +246,14 @@ function ReadingArea({ open, selectedDoc }) {
           )}
           {selectedDoc ? (
             <Typography paragraph>
-              {parse(selectedDoc.content[pageNo - 1])}
+              {selectedDoc.type === LexisDocumentType.WEBPAGE
+                ? parse(selectedDoc.content[pageNo - 1])
+                : selectedDoc.content[pageNo - 1].split('\n').map((line, index) => (
+                  <Fragment key={`${selectedDoc.name}-${pageNo}-${index + 1}`}>
+                    {line}
+                    <br />
+                  </Fragment>
+                ))}
             </Typography>
           ) : <Typography>No document selected</Typography>}
         </Box>
