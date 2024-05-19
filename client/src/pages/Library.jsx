@@ -8,6 +8,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import axios from 'axios';
 import BookItem from '../components/BookItem';
 import db from '../firebase';
+import VoiceSearch from '../components/VoiceSearch';
 
 function Library() {
   const [books, setBooks] = useState([]);
@@ -85,6 +86,7 @@ function Library() {
             variant="outlined"
             onSubmit={(e) => handleSearch(e)}
           >
+            <VoiceSearch setSearchQuery={setSearchQuery} />
             <InputBase
               sx={{ ml: 1, flex: 1 }}
               placeholder={advancedSearch ? 'Describe the book you\'re looking for' : 'Search books'}
