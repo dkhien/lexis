@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Grid, FormControlLabel, Switch, Box, Card, Paper, InputBase, IconButton,
   CircularProgress,
+  Typography,
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { collection, getDocs } from 'firebase/firestore';
@@ -105,7 +106,7 @@ function Library() {
               checked={advancedSearch}
               onChange={() => setAdvancedSearch(!advancedSearch)}
             />
-)}
+  )}
           label="Search with Lexis AI ✨"
         />
       </Card>
@@ -117,6 +118,9 @@ function Library() {
         }}
         >
           <CircularProgress />
+          <Box sx={{ marginTop: '1rem', fontSize: '1.2rem' }}>
+            <Typography>Finding suitable books for you... 🔍</Typography>
+          </Box>
         </Box>
         )}
         {searchResults.length === 0 && !loading && (
@@ -133,8 +137,9 @@ function Library() {
             <Grid item xs={12} sm={6} md={4} lg={2} key={book.id}>
               <BookItem
                 name={book.name}
-                image="https://m.media-amazon.com/images/I/51E2055ZGUL._SL1000_.jpg"
+                image={book.cover}
                 author={book.author}
+                content={book.content}
               />
             </Grid>
           ))}

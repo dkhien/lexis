@@ -9,7 +9,9 @@ import { useNavigate } from 'react-router-dom';
 import useDocumentStore from '../../store/documentStore';
 import { State, LexisDocumentType, Languages } from '../../constants';
 
-function BookItem({ name, image, author }) {
+function BookItem({
+  name, image, author, content,
+}) {
   const addDocument = useDocumentStore((state) => state.addDocument);
   const navigate = useNavigate();
 
@@ -21,7 +23,7 @@ function BookItem({ name, image, author }) {
       file: null,
       language: Languages.English,
       name,
-      content: ['1', '2', '3'],
+      content,
     });
     navigate('/');
   };
@@ -34,7 +36,7 @@ function BookItem({ name, image, author }) {
             <CardMedia
               component="img"
               height="250"
-              image={image}
+              image={image || 'https://freight.cargo.site/w/302/i/d4a357e3270e3df8063e74bf538cad4c1ee2c0591cd6f316f1a72d9baa16b375/cover-default--book.svg'}
               alt="Book Cover"
               sx={{
                 borderRadius: '0.2rem',
@@ -76,6 +78,7 @@ BookItem.propTypes = {
   name: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
+  content: PropTypes.instanceOf(Array).isRequired,
 };
 
 export default BookItem;
