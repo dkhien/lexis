@@ -39,7 +39,7 @@ function FillInTheBlankGame() {
       currentSentence,
       sentenceWords,
       blankIndexes,
-      filledBlanks: sentenceWords.map((word) => (FITBWords.includes(word) ? '_' : word)),
+      filledBlanks: sentenceWords.map((word, index) => (blankIndexes.includes(index) ? '_' : word)),
       FITBWords,
       showResult: false,
     }));
@@ -130,9 +130,9 @@ function FillInTheBlankGame() {
               elevation={3}
               sx={{
                 padding: '1rem',
-                height: '6rem',
                 display: 'flex',
                 alignItems: 'center',
+                flexWrap: 'wrap',
               }}
             >
               {gameState.filledBlanks.map((word, index) => {
@@ -144,7 +144,10 @@ function FillInTheBlankGame() {
                       id={index}
                       color={index === Number(selectedBlank) ? 'secondary' : 'primary'}
                       onClick={(e) => setSelectedBlank(e.target.id)}
-                      sx={{ margin: '0.5rem' }}
+                      sx={{
+                        margin: '0.5rem',
+                        borderWidth: index === Number(selectedBlank) ? '3px' : 'default',
+                      }}
                     >
                       ‎ ‎ ‎ ‎
                       ‎ ‎ ‎ ‎
