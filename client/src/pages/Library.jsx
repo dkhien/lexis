@@ -106,7 +106,7 @@ function Library() {
               onChange={() => setAdvancedSearch(!advancedSearch)}
             />
 )}
-          label="Advanced Search"
+          label="Search with Lexis AI ✨"
         />
       </Card>
 
