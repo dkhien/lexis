@@ -1,30 +1,21 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import GameCard from './GameCard';
-import RapTBT from '../../assets/images/games/RapTBT.jpg';
-import balenci from '../../assets/images/games/balenci.jpg';
-import RapObito from '../../assets/images/games/RapObito.jpg';
+import scrambled from '../../assets/images/games/scrambled.jpeg';
+import fillintheblanks from '../../assets/images/games/fillintheblanks.png';
 
 const GameData = [
   {
     name: 'Scrambled',
-    description: 'hello',
-    image: RapTBT,
+    description: 'Rearrange the words to form the correct sentence.',
+    image: scrambled,
+    path: 'scrambled',
   },
   {
     name: 'Fill In The Blanks',
-    description: 'hello',
-    image: balenci,
-  },
-  {
-    name: 'Game 4',
-    description: 'the lizard is a bigg ahh lizazrd',
-    image: RapObito,
-  },
-  {
-    name: 'Game 5',
-    description: 'the lizard is a bigg ahh lizazrd',
-    image: RapTBT,
+    description: 'Arrange words into the blanks to form a complete sentence.',
+    image: fillintheblanks,
+    path: 'fillintheblank',
   },
 ];
 
@@ -40,6 +31,7 @@ export default function GameGrid() {
                 name={game.name}
                 description={game.description}
                 image={game.image}
+                path={game.path}
               />
             </Grid>
           ))}

@@ -8,6 +8,7 @@ import Games from './pages/Games';
 import NotFound from './pages/NotFound';
 import MainLayout from './layout/MainLayout';
 import ScrambledGame from './pages/ScrambledGame';
+import FillInTheBlankGame from './pages/FillInTheBlankGame';
 
 function App() {
   const routes = [
@@ -29,6 +30,11 @@ function App() {
     {
       path: '/games/scrambled',
       element: <ScrambledGame />,
+      wrapInMainLayout: true,
+    },
+    {
+      path: '/games/fillintheblank',
+      element: <FillInTheBlankGame />,
       wrapInMainLayout: true,
     },
     {

@@ -5,8 +5,12 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
-export default function GameCard({ name, description, image }) {
+export default function GameCard({
+  name, description, image, path,
+}) {
+  const navigate = useNavigate();
   return (
     <Card
       raised
@@ -16,7 +20,7 @@ export default function GameCard({ name, description, image }) {
         padding: '0.1em',
       }}
     >
-      <CardActionArea>
+      <CardActionArea onClick={() => navigate(path)}>
         <CardMedia
           component="img"
           height="500"
@@ -42,4 +46,5 @@ GameCard.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,
 };
