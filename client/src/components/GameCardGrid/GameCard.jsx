@@ -18,6 +18,7 @@ export default function GameCard({
         maxWidth: 500,
         margin: '0 auto',
         padding: '0.1em',
+        borderRadius: '1em',
       }}
     >
       <CardActionArea onClick={() => navigate(path)}>
@@ -27,7 +28,7 @@ export default function GameCard({
           width="500"
           image={image}
           alt="green iguana"
-          sx={{ padding: '1em 1em 0 1em', objectFit: 'contain' }}
+          sx={{ padding: '1em 1em 0 1em', objectFit: 'cover', borderRadius: '3em' }}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">

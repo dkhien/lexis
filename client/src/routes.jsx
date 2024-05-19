@@ -3,6 +3,9 @@ import Home from './pages/Home';
 import Reader from './pages/Reader';
 import Library from './pages/Library';
 import NotFound from './pages/NotFound';
+import Games from './pages/Games';
+import ScrambledGame from './pages/ScrambledGame';
+import FillInTheBlankGame from './pages/FillInTheBlankGame';
 
 const routes = [
   {
@@ -25,6 +28,25 @@ const routes = [
     element: <Library />,
     wrapInMainLayout: true,
     showInNavbar: true,
+  },
+  {
+    name: 'Games',
+    path: '/games',
+    element: <Games />,
+    wrapInMainLayout: true,
+    showInNavbar: true,
+  },
+  {
+    path: '/games/scrambled',
+    element: <ScrambledGame />,
+    wrapInMainLayout: true,
+    showInNavbar: false,
+  },
+  {
+    path: '/games/fillintheblank',
+    element: <FillInTheBlankGame />,
+    wrapInMainLayout: true,
+    showInNavbar: false,
   },
   {
     name: 'Not Found',

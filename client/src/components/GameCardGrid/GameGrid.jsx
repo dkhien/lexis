@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import GameCard from './GameCard';
-import scrambled from '../../assets/images/games/scrambled.jpeg';
+import scrambled from '../../assets/images/games/scrambled.png';
 import fillintheblanks from '../../assets/images/games/fillintheblanks.png';
 
 const GameData = [
