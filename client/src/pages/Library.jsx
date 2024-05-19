@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import {
   Grid, FormControlLabel, Switch, Box, Card, Paper, InputBase, IconButton,
   CircularProgress,
+  Typography,
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { collection, getDocs } from 'firebase/firestore';
 import axios from 'axios';
 import BookItem from '../components/BookItem';
 import db from '../firebase';
+import VoiceSearch from '../components/VoiceSearch';
 
 function Library() {
   const [books, setBooks] = useState([]);
@@ -85,6 +87,7 @@ function Library() {
             variant="outlined"
             onSubmit={(e) => handleSearch(e)}
           >
+            <VoiceSearch setSearchQuery={setSearchQuery} />
             <InputBase
               sx={{ ml: 1, flex: 1 }}
               placeholder={advancedSearch ? 'Describe the book you\'re looking for' : 'Search books'}
@@ -103,8 +106,8 @@ function Library() {
               checked={advancedSearch}
               onChange={() => setAdvancedSearch(!advancedSearch)}
             />
-)}
-          label="Advanced Search"
+  )}
+          label="Search with Lexis AI ✨"
         />
       </Card>
 
@@ -115,6 +118,9 @@ function Library() {
         }}
         >
           <CircularProgress />
+          <Box sx={{ marginTop: '1rem', fontSize: '1.2rem' }}>
+            <Typography>Finding suitable books for you... 🔍</Typography>
+          </Box>
         </Box>
         )}
         {searchResults.length === 0 && !loading && (
@@ -131,8 +137,9 @@ function Library() {
             <Grid item xs={12} sm={6} md={4} lg={2} key={book.id}>
               <BookItem
                 name={book.name}
-                image="https://m.media-amazon.com/images/I/51E2055ZGUL._SL1000_.jpg"
+                image={book.cover}
                 author={book.author}
+                content={book.content}
               />
             </Grid>
           ))}
