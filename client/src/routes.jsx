@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import Reader from './pages/Reader';
 import Library from './pages/Library';
 import NotFound from './pages/NotFound';
+import HomeAdmin from './pages/admin/HomeAdmin';
 
 const routes = [
   {
@@ -30,6 +31,13 @@ const routes = [
     name: 'Not Found',
     path: '*',
     element: <NotFound />,
+    wrapInMainLayout: true,
+    showInNavbar: false,
+  },
+  {
+    name: 'Home Admin',
+    path: '/admin',
+    element: <HomeAdmin />,
     wrapInMainLayout: true,
     showInNavbar: false,
   },
