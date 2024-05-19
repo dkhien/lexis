@@ -6,11 +6,13 @@ import {
 } from '@mui/material';
 import FileUploadDropzone from './FileUploadDropzone';
 import TextUpload from './TextUpload';
+import UrlUpload from './UrlUpload';
 
 // Tab list for the upload modal
 const tabs = [
   { label: 'From file', component: <FileUploadDropzone /> },
   { label: 'From text', component: <TextUpload /> },
+  { label: 'From URL', component: <UrlUpload /> },
 ];
 
 /**

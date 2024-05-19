@@ -47,6 +47,7 @@ function DocumentList() {
 
     let textDocs = docsToConvert.filter((doc) => doc.type === LexisDocumentType.TEXT);
     let fileDocs = docsToConvert.filter((doc) => doc.type === LexisDocumentType.FILE);
+    let webpageDocs = docsToConvert.filter((doc) => doc.type === LexisDocumentType.WEBPAGE);
 
     const formData = new FormData();
 
@@ -68,6 +69,13 @@ function DocumentList() {
       language: doc.language,
     }))));
 
+    formData.append('webpage-docs', JSON.stringify(webpageDocs.map((doc) => ({
+      id: doc.id,
+      name: doc.name,
+      content: doc.content,
+      language: doc.language,
+    }))));
+
     const uploadApi = `${process.env.REACT_APP_SERVER_URL}/api/upload`;
     const response = await axios.post(uploadApi, formData, {
       headers: {
@@ -75,7 +83,7 @@ function DocumentList() {
       },
     });
 
-    const { fileResults, textResults } = response.data;
+    const { fileResults, textResults, webpageResults } = response.data;
 
     fileDocs = fileDocs.map((doc, index) => ({
       ...doc,
@@ -90,7 +98,14 @@ function DocumentList() {
       state: State.DONE,
     }));
 
-    const convertedDocs = [...fileDocs, ...textDocs];
+    webpageDocs = webpageDocs.map((doc, index) => ({
+      ...doc,
+      resultFile: webpageResults[index].resultFile,
+      content: webpageResults[index].content,
+      state: State.DONE,
+    }));
+
+    const convertedDocs = [...fileDocs, ...textDocs, ...webpageDocs];
 
     setIsLoading(false);
     setIsConverted(true);
@@ -106,7 +121,7 @@ function DocumentList() {
   };
 
   return (
-    <Card sx={{ padding: '2rem', marginX: '5vw' }}>
+    <Card sx={{ padding: '2rem', borderRadius: '1rem' }} variant="outlined">
       <Box sx={{ height: '550px', overflowY: 'auto' }}>
         {documents.map((doc) => (
           <DocumentListItem key={doc.id} document={doc} />

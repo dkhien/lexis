@@ -2,6 +2,8 @@ const path = require('path');
 const { imagesToText } = require('../services/tesseract');
 const { convertPdf } = require('../services/poppler');
 const winstonLogger = require('../utils/logger');
+const { readWebsite } = require('../services/noderead');
+
 const {
   writeContentToFile, normalizeFileName, Directory, MimeType,
 } = require('../utils/fileUtils');
@@ -162,4 +164,29 @@ async function processTexts(textDocs) {
   return results;
 }
 
-module.exports = { processFiles, processTexts };
+async function processWebpages(webpageDocs) {
+  const webpageContents = {};
+  try {
+    await Promise.all(webpageDocs.map(async (doc) => {
+      const resultFileName = `${normalizeFileName(doc.name)}-${doc.id}`;
+      let webpageContent = await readWebsite(doc.content[0]);
+      webpageContent = `<h3>${webpageContent.title}</h3>${webpageContent.content}`;
+      webpageContents[resultFileName] = webpageContent;
+    }));
+  } catch (error) {
+    winstonLogger.error('Error processing webpage: ', error);
+  }
+
+  const htmlResults = await generateHtml(webpageContents);
+  await generateJson(webpageContents);
+
+  const results = Object.keys(htmlResults).map((filename) => ({
+    resultFile: `${filename}`,
+    content: Array.isArray(webpageContents[filename])
+      ? webpageContents[filename] : [webpageContents[filename]],
+  }));
+
+  return results;
+}
+
+module.exports = { processFiles, processTexts, processWebpages };

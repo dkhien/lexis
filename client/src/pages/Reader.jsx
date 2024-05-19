@@ -16,12 +16,14 @@ import { InputAdornment, TextField } from '@mui/material';
 import {
   NavigateNext, NavigateBefore, FirstPage, LastPage,
 } from '@mui/icons-material';
+import parse from 'html-react-parser';
 import DrawerHeader from '../components/ReaderSidebar/DrawerHeader';
 import useDocumentStore from '../store/documentStore';
 import ReaderSidebar from '../components/ReaderSidebar';
 import db from '../firebase';
 import SummaryAccordion from '../components/SummaryAccordion/SummaryAccordion';
-import { State } from '../constants';
+import { LexisDocumentType, State } from '../constants';
+import handleDownloadUtil from '../utils/downloadUtils';
 
 const drawerWidth = 300;
 
@@ -159,6 +161,7 @@ export default function Reader() {
 
   const handleSummarize = async () => {
     try {
+      // TODO: Summarize by page or by document?
       const summaryApi = `${process.env.REACT_APP_SERVER_URL}/api/summarize`;
       const textToSummarize = { text: selectedDoc.content.join() };
       setSelectedDoc((prev) => ({
@@ -175,6 +178,10 @@ export default function Reader() {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleDownload = async () => {
+    await handleDownloadUtil(selectedDoc);
   };
 
   return (
@@ -202,7 +209,7 @@ export default function Reader() {
                 Summarizing...
               </Button>
             ) : <Button color="primary" variant="outlined" onClick={handleSummarize}>Summarize</Button>}
-            <Button color="primary" variant="outlined" sx={{ ml: 2 }}>Download</Button>
+            <Button color="primary" variant="outlined" onClick={handleDownload} sx={{ ml: 2 }}>Download</Button>
           </Box>
         </Toolbar>
       </AppBar>
@@ -220,6 +227,11 @@ export default function Reader() {
 
 function ReadingArea({ open, selectedDoc }) {
   const [pageNo, setPageNo] = useState(1);
+
+  useEffect(() => {
+    document.documentElement.lang = selectedDoc ? selectedDoc.language.substring(0, 2) : 'en';
+  }, [selectedDoc]);
+
   return (
     <Main open={open}>
       <DrawerHeader />
@@ -232,20 +244,20 @@ function ReadingArea({ open, selectedDoc }) {
         }}
       >
 
-        {selectedDoc && selectedDoc.summary && (
-          <Box width="60%" overflow="auto" align="justify">
-            <SummaryAccordion summaryText={selectedDoc.summary} />
-          </Box>
-        )}
         <Box width="60%" height="80vh" overflow="auto" align="justify">
+          {selectedDoc && selectedDoc.summary && (
+            <SummaryAccordion summaryText={selectedDoc.summary} />
+          )}
           {selectedDoc ? (
             <Typography paragraph>
-              {selectedDoc.content[pageNo - 1].split('\n').map((line, index) => (
-                <Fragment key={`${selectedDoc.name}-${pageNo}-${index + 1}`}>
-                  {line}
-                  <br />
-                </Fragment>
-              ))}
+              {selectedDoc.type === LexisDocumentType.WEBPAGE
+                ? parse(selectedDoc.content[pageNo - 1])
+                : selectedDoc.content[pageNo - 1].split('\n').map((line, index) => (
+                  <Fragment key={`${selectedDoc.name}-${pageNo}-${index + 1}`}>
+                    {line}
+                    <br />
+                  </Fragment>
+                ))}
             </Typography>
           ) : <Typography>No document selected</Typography>}
         </Box>

@@ -5,16 +5,16 @@ const { Directory } = require('../utils/fileUtils');
 const winstonLogger = require('../utils/logger');
 
 function addStyleToHtml(fileName, style) {
-  if (style === undefined || style === null || Object.keys(style).length === 0) {
-    return;
-  }
-
-  const filePath = path.join(__dirname, '../', Directory.RESULTS, `${fileName}.html`);
-
-  let html = fs.readFileSync(filePath, 'utf8');
   let styleTag = '';
-
-  try {
+  if (style === undefined || style === null || Object.keys(style).length === 0) {
+    styleTag += 'body { \n';
+    styleTag += 'background-color: #fbfbc8; \n';
+    styleTag += 'color: black; \n';
+    styleTag += 'font-family: Roboto, sans-serif; \n';
+    styleTag += 'font-size: 16px; \n';
+    styleTag += 'padding: 3rem; \n';
+    styleTag += '} \n';
+  } else {
     if (style.newLinkColor) {
       styleTag += `a { color: ${style.newLinkColor}; }\n`;
     }
@@ -34,10 +34,13 @@ function addStyleToHtml(fileName, style) {
     if (style.fontFamilyValue) {
       styleTag += `font-family: ${style.fontFamilyValue};\n`;
     }
+    styleTag += 'padding: 3rem; \n';
     styleTag += '}\n';
-  } catch (error) {
-    throw new Error('Invalid style object');
   }
+
+  const filePath = path.join(__dirname, '../', Directory.RESULTS, `${fileName}.html`);
+
+  let html = fs.readFileSync(filePath, 'utf8');
 
   html = html.replace(/<style>[\s\S]*?<\/style>/g, `<style>\n${styleTag}</style>`);
 
@@ -61,9 +64,6 @@ async function convertHtmlToPdf(fileName) {
       path: pdfPath,
       format: 'A4',
       printBackground: true,
-      margin: {
-        top: '50px', right: '50px', bottom: '50px', left: '50px',
-      },
     });
 
     await browser.close();

@@ -2,30 +2,10 @@ import React from 'react';
 import {
   BrowserRouter, Routes, Route,
 } from 'react-router-dom';
-import Home from './pages/Home';
-import Reader from './pages/Reader';
-import NotFound from './pages/NotFound';
+import routes from './routes';
 import MainLayout from './layout/MainLayout';
 
 function App() {
-  const routes = [
-    {
-      path: '/',
-      element: <Home />,
-      wrapInMainLayout: true,
-    },
-    {
-      path: '/reader',
-      element: <Reader />,
-      wrapInMainLayout: false,
-    },
-    {
-      path: '*',
-      element: <NotFound />,
-      wrapInMainLayout: true,
-    },
-  ];
-
   // Disable ruler by default
   window.localStorage.setItem('rulerEnabled', 0);
 
