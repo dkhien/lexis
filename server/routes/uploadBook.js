@@ -22,6 +22,7 @@ router.post('/uploadBook', upload.single('file'), async (req, res, next) => {
     const {
       isbn, title, author, language, description,
     } = fileBook;
+    console.log(author, description, language, title, content, isbn);
 
     const book = await updateBook(author, description, language, title, content, isbn);
     res.send(`Book uploaded successfully!${this.toString(book)}`);

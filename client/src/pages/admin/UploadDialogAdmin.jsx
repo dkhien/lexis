@@ -34,31 +34,37 @@ export default function UploadDialogAdmin({ sx }) {
   };
 
   const handleUpload = async () => {
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length === 0) {
-      setSnackbarMessage('Book uploaded successfully!');
-      setShowToast(true);
-      // Perform book uploading logic here
-      const formData = new FormData();
-      formData.append('file', bookFile);
-      formData.append('file-book', JSON.stringify({
-        id: uuidv4(),
-        title,
-        content: null,
-        language: Languages.English,
-        isbn,
-        author,
-        description,
-      }));
-      const uploadApi = `${process.env.REACT_APP_SERVER_URL}/api/admin/uploadBook`;
-      const response = await axios.post(uploadApi, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(response);
-    } else {
-      setSnackbarMessage('Please fill in all required fields.');
+    try {
+      const newErrors = validateForm();
+      if (Object.keys(newErrors).length === 0) {
+        setSnackbarMessage('Book uploaded successfully!');
+        setShowToast(true);
+        // Perform book uploading logic here
+        const formData = new FormData();
+        formData.append('file', bookFile);
+        formData.append('file-book', JSON.stringify({
+          id: uuidv4(),
+          title,
+          content: null,
+          language: Languages.English,
+          isbn,
+          author,
+          description,
+        }));
+        const uploadApi = `${process.env.REACT_APP_SERVER_URL}/api/admin/uploadBook`;
+        await axios.post(uploadApi, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+      // console.log(response);
+      } else {
+        setSnackbarMessage('Please fill in all required fields.');
+        setShowToast(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setSnackbarMessage('Failed to upload book!');
       setShowToast(true);
     }
   };
