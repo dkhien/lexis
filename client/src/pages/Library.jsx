@@ -20,7 +20,6 @@ function Library() {
   const AI_SEARCH_API = `${process.env.REACT_APP_AI_SERVER_URL}`;
 
   const handleAdvancedSearch = async () => {
-    if (searchQuery.trim() === '') setSearchResults(books);
     setLoading(true);
     const response = await axios.post(AI_SEARCH_API, { user_prompt: searchQuery });
     let ids = JSON.parse(response.data);
@@ -30,7 +29,6 @@ function Library() {
   };
 
   const handleBasicSearch = () => {
-    if (searchQuery.trim() === '') setSearchResults(books);
     const filteredBooks = books.filter((book) => {
       const bookName = book.name.toLowerCase();
       const bookAuthor = book.author.toLowerCase();
@@ -59,6 +57,10 @@ function Library() {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    if (searchQuery.trim() === '') {
+      setSearchResults(books);
+      return;
+    }
     if (advancedSearch) {
       handleAdvancedSearch();
     } else {
@@ -67,6 +69,10 @@ function Library() {
   };
 
   useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setSearchResults(books);
+      return;
+    }
     if (!advancedSearch) {
       handleBasicSearch();
     }
