@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Grid, Typography, Paper, Button,
+  Box, Grid, Typography, Paper, Button,
 } from '@mui/material';
+import Confetti from 'react-confetti';
 import mockFITBSentences from '../utils/FITBMockData';
+import VideoBackground from '../components/VideoBackground/VideoBackground';
 
 function FillInTheBlankGame() {
   const [gameState, setGameState] = useState({
@@ -115,6 +117,7 @@ function FillInTheBlankGame() {
         <Typography variant="body1" marginTop="1rem" marginBottom="1rem" align="center">
           Arrange words into the blanks to form a complete sentence.
         </Typography>
+        <VideoBackground />
       </Grid>
       {gameStarted && (
         <>
@@ -208,9 +211,12 @@ function FillInTheBlankGame() {
                   {currentSentence === filledBlanks.join(' ') ? 'Correct!' : 'Wrong!'}
                 </Typography>
                 {currentSentence === filledBlanks.join(' ') ? (
-                  <Button variant="contained" onClick={handleChangeLevel}>
-                    Next
-                  </Button>
+                  <Box>
+                    <Confetti />
+                    <Button variant="contained" onClick={handleChangeLevel}>
+                      Next
+                    </Button>
+                  </Box>
                 ) : (
                   <Button variant="contained" onClick={handleRestartLevel}>
                     Restart

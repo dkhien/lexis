@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Button, Grid, Paper, Typography,
+  Box, Button, Grid, Paper, Typography,
 } from '@mui/material';
+import Confetti from 'react-confetti';
 import mockScrambledSentences from '../utils/mockData';
+import VideoBackground from '../components/VideoBackground/VideoBackground';
 
 function ScrambledGame() {
   const [gameState, setGameState] = useState({
@@ -95,6 +97,7 @@ function ScrambledGame() {
         <Typography variant="body1" marginTop="1rem" marginBottom="1rem" align="center">
           Rearrange the words to form the correct sentence.
         </Typography>
+        <VideoBackground />
       </Grid>
 
       {gameStarted && (
@@ -158,9 +161,12 @@ function ScrambledGame() {
                   {currentSentence === orderedWords.join(' ') ? 'Correct!' : 'Wrong!'}
                 </Typography>
                 {currentSentence === orderedWords.join(' ') ? (
-                  <Button variant="contained" onClick={handleChangeLevel}>
-                    Next
-                  </Button>
+                  <Box>
+                    <Confetti />
+                    <Button variant="contained" onClick={handleChangeLevel}>
+                      Next
+                    </Button>
+                  </Box>
                 ) : (
                   <Button variant="contained" onClick={handleRestartLevel}>
                     Restart
