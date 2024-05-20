@@ -18,7 +18,7 @@ const firebaseConfig = {
 const firebaseapp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseapp);
 
-const updateBook = async (author, description, lang, name, content, isbn) => {
+const updateBook = async (author, description, lang, name, content, isbn, cover) => {
   const result = await setDoc(doc(db, 'books', isbn), {
     author,
     description,
@@ -26,6 +26,7 @@ const updateBook = async (author, description, lang, name, content, isbn) => {
     name,
     content,
     isbn,
+    cover,
   });
   return result;
 };
