@@ -20,11 +20,11 @@ router.post('/uploadBook', upload.single('file'), async (req, res, next) => {
     const { content } = JSON.parse(jsonContent);
 
     const {
-      isbn, title, author, language, description,
+      isbn, title, author, language, description, cover,
     } = fileBook;
-    console.log(author, description, language, title, content, isbn);
+    console.log(author, description, language, title, content, isbn, cover);
 
-    const book = await updateBook(author, description, language, title, content, isbn);
+    const book = await updateBook(author, description, language, title, content, isbn, cover);
     res.send(`Book uploaded successfully!${this.toString(book)}`);
   } catch (error) {
     next(error);

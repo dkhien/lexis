@@ -22,6 +22,7 @@ export default function UploadDialogAdmin({ sx }) {
   const [showToast, setShowToast] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [bookFile, setBookFile] = useState(null);
+  const [bookCoverUrl, setBookCoverUrl] = useState('');
 
   const validateForm = () => {
     const newErrors = {};
@@ -50,6 +51,7 @@ export default function UploadDialogAdmin({ sx }) {
           isbn,
           author,
           description,
+          cover: bookCoverUrl,
         }));
         const uploadApi = `${process.env.REACT_APP_SERVER_URL}/api/admin/uploadBook`;
         await axios.post(uploadApi, formData, {
@@ -83,6 +85,7 @@ export default function UploadDialogAdmin({ sx }) {
         setTitle(book.title);
         setAuthor(book.authors ? book.authors.map((authorr) => authorr.name).join(', ') : 'N/A');
         setDescription(book.notes || '');
+        setBookCoverUrl(book.cover ? book.cover.medium : '');
       }
     } catch (error) {
       console.log(error);
