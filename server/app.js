@@ -10,6 +10,7 @@ const indexRouter = require('./routes/index');
 const uploadRouter = require('./routes/upload');
 const downloadRouter = require('./routes/download');
 const summarizeRouter = require('./routes/summarize');
+const uploadBook = require('./routes/uploadBook');
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use('/', indexRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/download', downloadRouter);
 app.use('/api/summarize', summarizeRouter);
+app.use('/api/admin', uploadBook);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
