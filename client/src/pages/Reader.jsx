@@ -1,7 +1,6 @@
 import {
   React, useState, useEffect, Fragment,
 } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
@@ -20,7 +19,6 @@ import parse from 'html-react-parser';
 import DrawerHeader from '../components/ReaderSidebar/DrawerHeader';
 import useDocumentStore from '../store/documentStore';
 import ReaderSidebar from '../components/ReaderSidebar';
-import db from '../firebase';
 import SummaryAccordion from '../components/SummaryAccordion/SummaryAccordion';
 import { LexisDocumentType, State } from '../constants';
 import handleDownloadUtil from '../utils/downloadUtils';
@@ -65,39 +63,47 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-function Pagination({ page, setPage, totalPages }) {
+function Pagination({
+  page, setPage, totalPages, pageMapping, setPageMapping, selectedDoc,
+}) {
   const [inputPage, setInputPage] = useState(parseInt(page, 10));
-
-  useEffect(async () => {
-    const querySnapshot = await getDocs(collection(db, 'books'));
-    querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => Name: ${doc.data().name}, Author: ${doc.data().author}`);
-    });
-  }, []);
-
   useEffect(() => {
     setInputPage(parseInt(page, 10));
   }, [page]);
+
+  const handlePageChange = (newPage) => {
+    console.log('old Map', pageMapping);
+    const newMapping = new Map(pageMapping);
+    newMapping.set(selectedDoc.id, newPage);
+    setPage(newPage);
+    setPageMapping(newMapping);
+    console.log('new Map', newMapping);
+  };
 
   const handleSubmit = (e) => {
     if (e.keyCode === 13) {
       e.preventDefault();
       if (inputPage === '') setInputPage(page);
       if (!Number.isInteger(inputPage)) setInputPage(page);
-      if (inputPage >= 1 && inputPage <= totalPages) { setPage(inputPage); }
+      if (inputPage >= 1 && inputPage <= totalPages) {
+        handlePageChange(inputPage);
+      }
     }
   };
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
       <IconButton
-        onClick={() => setPage(1)}
+        onClick={() => handlePageChange(1)}
         size="small"
         disabled={page === 1}
       >
         <FirstPage />
       </IconButton>
       <IconButton
-        onClick={() => setPage((prevPage) => (prevPage > 1 ? prevPage - 1 : prevPage))}
+        onClick={() => {
+          const newPage = page > 1 ? page - 1 : page;
+          handlePageChange(newPage);
+        }}
         size="small"
         disabled={page === 1}
       >
@@ -112,7 +118,7 @@ function Pagination({ page, setPage, totalPages }) {
         onBlur={() => {
           if (inputPage === '') setInputPage(page);
           if (!Number.isInteger(inputPage)) setInputPage(page);
-          if (inputPage >= 1 && inputPage <= totalPages) { setPage(inputPage); }
+          if (inputPage >= 1 && inputPage <= totalPages) { handlePageChange(inputPage); }
         }}
         onKeyDown={handleSubmit}
         InputLabelProps={{
@@ -132,14 +138,17 @@ function Pagination({ page, setPage, totalPages }) {
         sx={{ minWidth: '12ch', width: '20%' }}
       />
       <IconButton
-        onClick={() => setPage((prevPage) => (prevPage < totalPages ? prevPage + 1 : prevPage))}
+        onClick={() => {
+          const newPage = page < totalPages ? page + 1 : page;
+          handlePageChange(newPage);
+        }}
         size="small"
         disabled={page === totalPages}
       >
         <NavigateNext />
       </IconButton>
       <IconButton
-        onClick={() => setPage(totalPages)}
+        onClick={() => handlePageChange(totalPages)}
         size="small"
         disabled={page === totalPages}
       >
@@ -226,7 +235,23 @@ export default function Reader() {
 }
 
 function ReadingArea({ open, selectedDoc }) {
+  const [pageMapping, setPageMapping] = useState(new Map().set(selectedDoc?.id, 1));
   const [pageNo, setPageNo] = useState(1);
+
+  useEffect(() => {
+    if (selectedDoc) {
+      const savedPage = pageMapping.get(selectedDoc.id) || 1;
+      setPageNo(savedPage);
+    }
+  }, [selectedDoc]);
+
+  useEffect(() => {
+    if (selectedDoc) {
+      const newMapping = new Map(pageMapping);
+      newMapping.set(selectedDoc.id, pageNo);
+      setPageMapping(newMapping);
+    }
+  }, [selectedDoc, pageNo]);
 
   useEffect(() => {
     document.documentElement.lang = selectedDoc ? selectedDoc.language.substring(0, 2) : 'en';
@@ -252,18 +277,26 @@ function ReadingArea({ open, selectedDoc }) {
             <Typography paragraph>
               {selectedDoc.type === LexisDocumentType.WEBPAGE
                 ? parse(selectedDoc.content[pageNo - 1])
-                : selectedDoc.content[pageNo - 1].split('\n').map((line, index) => (
+                : (selectedDoc.content[pageNo - 1] || '').split('\n').map((line, index) => (
                   <Fragment key={`${selectedDoc.name}-${pageNo}-${index + 1}`}>
                     {line}
                     <br />
                   </Fragment>
                 ))}
+
             </Typography>
           ) : <Typography>No document selected</Typography>}
         </Box>
         {
           selectedDoc && (
-            <Pagination page={pageNo} setPage={setPageNo} totalPages={selectedDoc.content.length} />
+            <Pagination
+              page={pageNo}
+              setPage={setPageNo}
+              totalPages={selectedDoc.content.length}
+              pageMapping={pageMapping}
+              setPageMapping={setPageMapping}
+              selectedDoc={selectedDoc}
+            />
           )
         }
       </Box>
@@ -284,4 +317,7 @@ Pagination.propTypes = {
   page: PropTypes.number.isRequired,
   setPage: PropTypes.func.isRequired,
   totalPages: PropTypes.number.isRequired,
+  pageMapping: PropTypes.instanceOf(Map).isRequired,
+  setPageMapping: PropTypes.func.isRequired,
+  selectedDoc: PropTypes.instanceOf(Object).isRequired,
 };
